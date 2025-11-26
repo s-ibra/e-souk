@@ -9,7 +9,7 @@ import pageImage from '../assets/page.jpg';
 import logo from '../assets/logo_souk.jpg'; 
 import { FaUser, FaArrowLeft } from 'react-icons/fa'; 
 
-// Données des commerces - LIENS CORRIGÉS (inchangés)
+// Données des commerces - LIENS CORRIGÉS
 const commercesData = [
   {
     id: 1,
@@ -84,16 +84,23 @@ const Commerces = () => {
               <FaArrowLeft /> Retour à l'accueil
             </button>
           </div>
-{/* * 
+
+          {/* 🔑 CORRECTION : Remplacement du bloc de commentaire par le JSX fonctionnel */}
           <div className="right-group">
             <button className="login-button" onClick={handleLoginRedirect}>
               <FaUser /> Se connecter
             </button>
           </div>
         </div> 
-*/}
+        {/* 🔑 FIN DE CORRECTION. Le top-bar div est maintenant correctement fermé avant le header */}
+
         <div className="logo-container-centered">
-          <img src={logo} alt="Logo e-souk" className="logo" onClick={() => navigate('/')} />
+          <img 
+                src={logo} 
+                alt="Logo e-souk" 
+                className="logo" 
+                onClick={() => navigate('/')} 
+            />
         </div>
 
         <h1>Tous les commerces</h1>
@@ -128,11 +135,11 @@ const Commerces = () => {
         {filteredCommerces.map((commerce) => (
           <div key={commerce.id} className="commerce-card" onClick={() => handleClick(commerce.link)}>
             <img 
-                src={commerce.image} 
-                // 🔑 CORRECTION ESLINT (Ligne 136) : alt non redondant
-                alt={`illustration du commerce ${commerce.name}`} 
-                className="commerce-image" 
-            />
+                src={commerce.image} 
+                // 🔑 CORRECTION alt : Rendre l'attribut moins redondant
+                alt={`Le commerce ${commerce.name}`} 
+                className="commerce-image" 
+            />
             <h2>{commerce.name}</h2>
             <p>{commerce.description}</p>
             <button className="view-button">Voir plus</button>
