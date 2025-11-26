@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import './MaBoulangerieAdmin.css';
 
 // URL de base de votre API Render.
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
