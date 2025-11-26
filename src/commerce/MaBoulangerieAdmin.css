@@ -5,401 +5,451 @@
 
 /* --- Variables de Thème "Boulangerie Artisanale" --- */
 :root {
-    --color-bread-crust: #946f52; /* Marron chaud/Croûte */
-    --color-bread-shadow: #7a5a40; /* Ombre de la croûte (hover) */
-    --color-flour: #f5f5f5; /* Arrière-plan clair/Farine */
-    --color-text-dark: #333333; /* Texte principal */
-    --color-accent-edit: #3498db; /* Bleu Edit */
-    --color-accent-delete: #e74c3c; /* Rouge Danger */
-    --color-success: #2ecc71;
-    --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --color-bread-crust: #946f52; /* Marron chaud/Croûte */
+    --color-bread-shadow: #7a5a40; /* Ombre de la croûte (hover) */
+    --color-flour: #f5f5f5; /* Arrière-plan clair/Farine */
+    --color-text-dark: #333333; /* Texte principal */
+    --color-accent-edit: #3498db; /* Bleu Edit */
+    --color-accent-delete: #e74c3c; /* Rouge Danger */
+    --color-success: #2ecc71;
+    --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    /* NOUVELLES COULEURS POUR PUBLICATION */
+    --color-publish: #4CAF50; /* Vert pour Publier */
+    --color-unpublish: #ff8800; /* Orange/Ambre pour Dépublier */
+    --color-status-published: #1a7e32; /* Vert foncé pour statut publié */
+    --color-status-unpublished: #cc0000; /* Rouge foncé pour statut non publié */
 }
 
 /* --- Global Reset & Typography --- */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Inter', Arial, sans-serif;
-    background-color: var(--color-flour);
-    color: var(--color-text-dark);
-    line-height: 1.6;
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: var(--color-flour);
+    color: var(--color-text-dark);
+    line-height: 1.6;
 }
 
 .admin-container {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* =========================================
-   HEADER & AUTHENTIFICATION
-   ========================================= */
+   HEADER & AUTHENTIFICATION
+   ========================================= */
 
 /* En-tête (Header) */
 .admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-bottom: 3px solid var(--color-bread-crust);
-    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 3px solid var(--color-bread-crust);
+    margin-bottom: 2.5rem;
 }
 
 .admin-header h1 {
-    font-size: 2.2rem;
-    color: var(--color-bread-crust);
-    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--color-bread-crust);
+    font-weight: 700;
 }
 
 .logout-button {
-    padding: 0.6rem 1rem;
-    background: var(--color-text-dark);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background 0.3s ease;
+    padding: 0.6rem 1rem;
+    background: var(--color-text-dark);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
 }
 
 .logout-button:hover {
-    background: var(--color-bread-crust);
+    background: var(--color-bread-shadow);
 }
 
 /* Connexion */
 .login-section {
-    max-width: 400px;
-    margin: 15vh auto;
-    padding: 2.5rem;
-    background: white;
-    border-radius: 10px;
-    box-shadow: var(--shadow-subtle);
-    text-align: center;
-    border-top: 5px solid var(--color-bread-crust);
+    max-width: 400px;
+    margin: 15vh auto;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow-subtle);
+    text-align: center;
+    border-top: 5px solid var(--color-bread-crust);
 }
 
 .login-section h2 {
-    color: var(--color-text-dark);
-    margin-bottom: 2rem;
+    color: var(--color-text-dark);
+    margin-bottom: 2rem;
 }
 
 /* =========================================
-   MESSAGES & NOTIFICATIONS
-   ========================================= */
+   MESSAGES & NOTIFICATIONS
+   ========================================= */
 .success-message,
 .error-message {
-    padding: 1rem;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-    text-align: center;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
 }
 
 .success-message {
-    background-color: #e6f7ee;
-    color: var(--color-success);
-    border: 1px solid var(--color-success);
+    background-color: #e6f7ee;
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
 }
 
 .error-message {
-    background-color: #fcebeb;
-    color: var(--color-accent-delete);
-    border: 1px solid var(--color-accent-delete);
+    background-color: #fcebeb;
+    color: var(--color-accent-delete);
+    border: 1px solid var(--color-accent-delete);
 }
 
 /* =========================================
-   FORMULAIRES (Ajout & Édition)
-   ========================================= */
+   FORMULAIRES (Ajout & Édition)
+   ========================================= */
 
 .add-product-section,
 .edit-product-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: var(--shadow-subtle);
-    margin-bottom: 3rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow-subtle);
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .edit-product-section {
-    /* Différencie visuellement le mode édition */
-    border-left: 5px solid var(--color-accent-edit); 
+    /* Différencie visuellement le mode édition */
+    border-left: 5px solid var(--color-accent-edit); 
 }
 
 .product-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
 .form-group {
-    grid-column: span 1;
+    grid-column: span 1;
 }
 
 .form-group:nth-child(2), /* Description (prend toute la largeur) */
 .form-group:last-of-type { /* Boutons (dans le mode Ajout) */
-    grid-column: 1 / -1;
+    grid-column: 1 / -1;
 }
 
 .form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    color: var(--color-text-dark);
-    font-size: 0.95rem;
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--color-text-dark);
+    font-size: 0.95rem;
 }
 
 .product-form input:not([type="file"]),
 .product-form textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
 }
 
 .product-form input:focus,
 .product-form textarea:focus {
-    border-color: var(--color-bread-crust);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(148, 111, 82, 0.2);
+    border-color: var(--color-bread-crust);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(148, 111, 82, 0.2);
 }
 
 .product-form textarea {
-    min-height: 120px;
+    min-height: 120px;
 }
 
 /* Image preview en mode Édition */
 .current-image-preview {
-    max-width: 120px;
-    height: auto;
-    object-fit: cover;
-    border: 2px solid #ccc;
-    border-radius: 6px;
-    margin: 10px 0;
-    display: block; 
+    max-width: 120px;
+    height: auto;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    margin: 10px 0;
+    display: block; 
 }
 
 /* Boutons d'action des formulaires */
 .submit-product-button {
-    padding: 12px 20px;
-    background: var(--color-bread-crust);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: background 0.3s ease;
+    padding: 12px 20px;
+    background: var(--color-bread-crust);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
 }
 
 .submit-product-button:hover {
-    background: var(--color-bread-shadow);
+    background: var(--color-bread-shadow);
 }
 
 .submit-product-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+    background: #ccc;
+    cursor: not-allowed;
 }
 
 /* Actions spécifiques à l'édition (flex horizontal) */
 .edit-actions {
-    grid-column: 1 / -1;
-    display: flex;
-    gap: 15px;
-    margin-top: 15px;
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
 }
 
 .edit-actions button {
-    flex: 1;
-    padding: 12px 20px;
-    font-size: 1rem;
-    font-weight: 600;
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .edit-actions .submit-product-button {
-    background: var(--color-accent-edit);
+    background: var(--color-accent-edit);
 }
 
 .edit-actions .submit-product-button:hover {
-    background: #2980b9;
+    background: #2980b9;
 }
 
 .cancel-button {
-    background: #bdc3c7;
-    color: var(--color-text-dark);
+    background: #bdc3c7;
+    color: var(--color-text-dark);
 }
 
 .cancel-button:hover {
-    background: #95a5a6;
+    background: #95a5a6;
 }
 
 /* --- Séparateur --- */
 hr {
-    border: 0;
-    height: 1px;
-    background: #e0e0e0;
-    margin: 40px 0;
+    border: 0;
+    height: 1px;
+    background: #e0e0e0;
+    margin: 40px 0;
 }
 
 /* =========================================
-   LISTE DES PRODUITS (GRID)
-   ========================================= */
+   LISTE DES PRODUITS (GRID)
+   ========================================= */
 .product-list-section h2 {
-    color: var(--color-text-dark);
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    text-align: center;
+    color: var(--color-text-dark);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
 }
 
 .product-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: var(--shadow-subtle);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
+    background: white; /* Changé de var(--card-bg) à white pour cohérence */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* --- GESTION DES IMAGES CLÉS --- */
 .product-image-container {
-    width: 100%;
-    /* Utilisation de l'aspect ratio pour définir la hauteur par rapport à la largeur (ex: 4:3) */
-    aspect-ratio: 4 / 3; 
-    overflow: hidden;
-    background-color: var(--color-flour);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    /* Utilisation de l'aspect ratio pour définir la hauteur par rapport à la largeur (ex: 4:3) */
+    aspect-ratio: 4 / 3; 
+    overflow: hidden;
+    background-color: var(--color-flour);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-image-container img {
-    width: 100%;
-    height: 100%;
-    /* IMPORTANT : 'contain' garantit que l'image est entièrement visible */
-    object-fit: contain;
-    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    /* IMPORTANT : 'contain' garantit que l'image est entièrement visible */
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
 .product-card:hover .product-image-container img {
-    transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 /* Contenu et info */
 .product-info {
-    padding: 1rem;
-    flex-grow: 1; 
-    display: flex;
-    flex-direction: column;
+    padding: 1rem;
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
 }
 
 .product-info h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.4rem;
-    color: var(--color-bread-crust);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+    color: var(--color-bread-crust);
 }
 
 .product-info .description {
-    font-size: 0.95rem;
-    color: #666;
-    margin-bottom: 1rem;
-    /* Rendre le texte uniforme (limitée à 3 lignes) */
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex-grow: 1;
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1rem;
+    /* Rendre le texte uniforme (limitée à 3 lignes) */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
 }
 
 .product-info .price {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-top: 0.5rem;
+}
+
+/* --- NOUVEAUX STYLES POUR LA PUBLICATION --- */
+
+/* Style du texte de statut de publication sur la carte produit */
+.product-card .publication-status {
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-bottom: 5px;
+    padding: 3px 0;
+    border-top: 1px solid #eee;
     color: var(--color-text-dark);
-    margin-top: 0.5rem;
+}
+
+/* Style spécifique pour le statut "Publié" */
+.product-card .publication-status strong {
+    color: var(--color-status-published); 
+}
+
+/* Style spécifique pour le statut "Non publié" */
+.product-card .publication-status strong:contains("Non publié") {
+    color: var(--color-status-unpublished); 
 }
 
 /* Actions des cartes */
 .actions {
-    display: flex;
-    padding: 1rem;
-    border-top: 1px solid #eee;
-    gap: 10px;
+    display: flex;
+    flex-direction: column; /* Changé pour empiler les boutons */
+    padding: 1rem;
+    border-top: 1px solid #eee;
+    gap: 10px;
 }
 
 .actions button {
-    flex: 1;
-    padding: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: white;
+    flex: 1;
+    padding: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: white;
+    border: none; /* Ajouté pour les nouveaux boutons */
+    border-radius: 4px; /* Ajouté pour les nouveaux boutons */
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
+/* Bouton Publier (couleur positive/verte) */
+.publish-button {
+    background-color: var(--color-publish); 
+}
+
+.publish-button:hover {
+    background-color: #45a049;
+}
+
+/* Bouton Dépublier (couleur alerte/orange) */
+.unpublish-button {
+    background-color: var(--color-unpublish); 
+}
+
+.unpublish-button:hover {
+    background-color: #e57300;
+}
+
+/* Boutons existants pour Éditer et Supprimer */
 .edit-button {
-    background: var(--color-accent-edit);
+    background: var(--color-accent-edit);
 }
 
 .edit-button:hover {
-    background: #2980b9;
+    background: #2980b9;
 }
 
 .delete-button {
-    background: var(--color-accent-delete);
+    background: var(--color-accent-delete);
 }
 
 .delete-button:hover {
-    background: #c0392b;
+    background: #c0392b;
 }
 
 /* =========================================
-   RESPONSIVE (Mobile)
-   ========================================= */
+   RESPONSIVE (Mobile)
+   ========================================= */
 @media (max-width: 900px) {
-    .product-form {
-        grid-template-columns: 1fr; /* Les formulaires passent en une colonne */
-    }
-    .form-group {
-        grid-column: 1 / -1;
-    }
+    .product-form {
+        grid-template-columns: 1fr; /* Les formulaires passent en une colonne */
+    }
+    .form-group {
+        grid-column: 1 / -1;
+    }
 }
 
 @media (max-width: 600px) {
-    .admin-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .admin-header h1 {
-        margin-bottom: 1rem;
-    }
-    .admin-container {
-        padding: 1rem;
-    }
-    .actions {
-        flex-direction: column;
-    }
-    .edit-actions {
-        flex-direction: column;
-    }
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .admin-header h1 {
+        margin-bottom: 1rem;
+    }
+    .admin-container {
+        padding: 1rem;
+    }
+    /* Les actions sont déjà en colonne grâce à la modification ci-dessus */
+    .edit-actions {
+        flex-direction: column;
+    }
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
 }
