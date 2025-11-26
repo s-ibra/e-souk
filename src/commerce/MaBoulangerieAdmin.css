@@ -5,322 +5,344 @@
 
 /* --- Variables de couleur --- */
 :root {
-    --color-dark-text: #2d3748;      /* Texte principal */
-    --color-primary: #4f5143;        /* Vert/Marron foncé (Boutons, titres) */
-    --color-secondary: #e4d3c8;      /* Beige clair (Accents) */
-    --color-light-bg: #f7f7f7;       /* Arrière-plan général */
-    --color-success: #4CAF50;
-    --color-error: #F44336;
-    --color-delete: #d9534f;         /* Rouge suppression */
-    --color-edit: #007bff;           /* Bleu modification */
-    --shadow-light: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    --color-dark-text: #2d3748;      /* Texte principal */
+    --color-primary: #4f5143;        /* Vert/Marron foncé (Boutons, titres) */
+    --color-secondary: #e4d3c8;      /* Beige clair (Accents) */
+    --color-light-bg: #f7f7f7;       /* Arrière-plan général */
+    --color-success: #4CAF50;
+    --color-error: #F44336;
+    --color-delete: #d9534f;         /* Rouge suppression */
+    --color-edit: #007bff;           /* Bleu modification */
+    --shadow-light: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
 .admin-container {
-    background: var(--color-light-bg);
-    color: var(--color-dark-text);
-    padding: 30px;
-    max-width: 1400px;
-    margin: 0 auto;
+    background: var(--color-light-bg);
+    color: var(--color-dark-text);
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* --- En-tête (Header) --- */
 .admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 2px solid var(--color-primary);
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--color-primary);
+    margin-bottom: 30px;
 }
 
 .admin-header h1 {
-    font-size: 2rem;
-    color: var(--color-primary);
+    font-size: 2rem;
+    color: var(--color-primary);
 }
 
 .logout-button {
-    padding: 10px 15px;
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1rem;
-    transition: background 0.3s ease;
+    padding: 10px 15px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    transition: background 0.3s ease;
 }
 
 .logout-button:hover {
-    background: #3c3e34;
+    background: #3c3e34;
 }
 
 /* --- Messages (Succès/Erreur) --- */
 .success-message,
 .error-message {
-    padding: 12px 20px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    font-weight: bold;
-    text-align: center;
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .success-message {
-    background-color: #d4edda;
-    color: var(--color-success);
-    border: 1px solid var(--color-success);
+    background-color: #d4edda;
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
 }
 
 .error-message {
-    background-color: #f8d7da;
-    color: var(--color-error);
-    border: 1px solid var(--color-error);
+    background-color: #f8d7da;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
 }
 
 /* --- Section Formulaires (Ajout & Édition) --- */
 .form-section h2 {
-    color: var(--color-primary);
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .add-product-section,
 .edit-product-section {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-light);
-    margin-bottom: 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    margin-bottom: 40px;
 }
 
 .product-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--color-dark-text);
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--color-dark-text);
 }
 
 .product-form input[type="text"],
 .product-form input[type="number"],
 .product-form textarea,
 .product-form input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
 }
 
 .product-form textarea {
-    resize: vertical;
-    min-height: 80px;
+    resize: vertical;
+    min-height: 80px;
 }
 
 .image-selected {
-    font-size: 0.9rem;
-    color: var(--color-primary);
-    margin-top: 5px;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    margin-top: 5px;
 }
 
 /* Boutons de soumission */
 .submit-product-button {
-    padding: 12px 20px;
-    background: var(--color-success);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: background 0.3s ease;
+    padding: 12px 20px;
+    background: var(--color-success);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.3s ease;
 }
 
 .submit-product-button:hover {
-    background: #45a049;
+    background: #45a049;
 }
 
 /* Styles pour le formulaire d'édition */
 .edit-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .edit-actions button {
-    flex: 1;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .edit-actions .submit-product-button {
-    background: var(--color-edit);
+    background: var(--color-edit);
 }
 
 .edit-actions .submit-product-button:hover {
-    background: #0056b3;
+    background: #0056b3;
 }
 
 .cancel-button {
-    background: #ccc;
-    color: var(--color-dark-text);
+    background: #ccc;
+    color: var(--color-dark-text);
 }
 
 .cancel-button:hover {
-    background: #aaa;
+    background: #aaa;
 }
 
 .current-image-preview {
-    max-width: 150px;
-    max-height: 150px;
-    object-fit: cover;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 10px 0;
-    display: block; /* Nécessaire pour l'alignement */
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 10px 0;
+    display: block; 
 }
 
 
 /* --- Séparateur --- */
 hr {
-    border: 0;
-    height: 1px;
-    background: #ccc;
-    margin: 40px 0;
+    border: 0;
+    height: 1px;
+    background: #ccc;
+    margin: 40px 0;
 }
 
 /* --- Section Liste des Produits --- */
 .product-list-section h2 {
-    color: var(--color-primary);
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-    text-align: center;
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    text-align: center;
 }
 
 .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
 }
 
 .product-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-light);
+}
+
+/*
+    *** CORRECTION CLÉ POUR AFFICHER L'IMAGE EN ENTIER ***
+*/
+
+/* Conteneur pour forcer le ratio (facultatif mais recommandé) */
+.product-image-container {
+    position: relative;
+    width: 100%;
+    /* Règle pour un ratio 16:9 (100 / 16 * 9 = 56.25%) ou carré 1:1 (100%) */
+    padding-top: 65%; /* Utilisation de 65% pour un ratio d'aspect fixe */
+    background-color: #eee; /* Fond gris pour les marges (si l'image n'est pas 100%) */
 }
 
 .product-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+    /* Positionner l'image pour qu'elle remplisse le conteneur ratio */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 🔑 L'attribut clé : Afficher l'image en entier, créant des marges (bars) si nécessaire */
+    **object-fit: contain;**     /* Retirer la hauteur fixe de 200px car elle est gérée par padding-top */
 }
 
+/*
+    *** FIN DES CORRECTIONS CLÉS ***
+*/
+
 .product-info {
-    padding: 15px;
-    text-align: left;
+    padding: 15px;
+    text-align: left;
 }
 
 .product-info h3 {
-    margin-top: 0;
-    font-size: 1.3rem;
-    color: var(--color-primary);
+    margin-top: 0;
+    font-size: 1.3rem;
+    color: var(--color-primary);
 }
 
 .product-info .description {
-    font-size: 0.95rem;
-    color: #666;
-    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 10px;
 }
 
 .product-info .price {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: var(--color-dark-text);
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--color-dark-text);
 }
 
 .actions {
-    display: flex;
-    padding: 15px;
-    border-top: 1px solid #e2e8f0;
-    gap: 10px;
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #e2e8f0;
+    gap: 10px;
 }
 
 .actions button {
-    flex: 1;
-    padding: 8px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: white;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    transition: background 0.3s ease;
+    flex: 1;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background 0.3s ease;
 }
 
 .edit-button {
-    background: var(--color-edit);
+    background: var(--color-edit);
 }
 
 .edit-button:hover {
-    background: #0056b3;
+    background: #0056b3;
 }
 
 .delete-button {
-    background: var(--color-delete);
+    background: var(--color-delete);
 }
 
 .delete-button:hover {
-    background: #c9302c;
+    background: #c9302c;
 }
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
-    .admin-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    .admin-header h1 {
-        margin-bottom: 15px;
-        font-size: 1.8rem;
-    }
-    .admin-container {
-        padding: 15px;
-    }
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-    .edit-actions {
-        flex-direction: column;
-    }
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    .admin-header h1 {
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+    }
+    .admin-container {
+        padding: 15px;
+    }
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    .edit-actions {
+        flex-direction: column;
+    }
 }
