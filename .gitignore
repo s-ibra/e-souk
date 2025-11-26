@@ -1,63 +1,34 @@
-# ------------------------------------
-# 1. DEPENDANCES (IGNORER)
-# ------------------------------------
-# Dossiers créés par npm/yarn/pnpm pour stocker les dépendances.
+# --------------------------------
+# 1. Build Artifacts & Dependencies
+# --------------------------------
 /node_modules
-/package-lock.json
-/yarn.lock
-/npm-debug.log*
-/yarn-debug.log*
-/yarn-error.log*
-
-# ------------------------------------
-# 2. FICHIERS DE BUILD ET TEMPORAIRES (IGNORER)
-# ------------------------------------
-# Dossier de build du frontend (Netlify utilise celui-ci)
 /build
 /dist
 /out
 
-# Fichiers de cache et IDE/OS
-.DS_Store
-*.swp
-*.log
-.eslintcache
+# Lock files
+/package-lock.json
+/yarn.lock
 
-# Cache de Create React App
-.cache
-
-# ------------------------------------
-# 3. FICHIERS ENVIRONNEMENT ET SECRETS (OBLIGATOIRE)
-# ------------------------------------
-# **N'envoyez JAMAIS votre fichier de variables d'environnement
-# contenant des clés API, secrets JWT ou chaînes de connexion DB.**
+# --------------------------------
+# 2. Environment Variables & Cache
+# --------------------------------
+# C'est CRUCIAL pour la sécurité : ne jamais pousser les secrets.
 .env
 .env.local
-.env.development.local
-.env.production.local
+.env.*.local
+.eslintcache
 
-# ------------------------------------
-# 4. CONFIGURATION DE DEPLOIEMENT NETLIFY/VSC
-# ------------------------------------
-# Ces fichiers sont souvent gérés automatiquement ou localement.
-.netlify/
+# --------------------------------
+# 3. OS and IDE
+# --------------------------------
+.DS_Store
 .vscode/
 
-# ------------------------------------
-# 5. STRUCTURE DU PROJET (MONOREPO LÉGER)
-# ------------------------------------
-# 🛑 CORRECTION CLÉ POUR L'AVERTISSEMENT GIT IMBRIQUÉ
-# Si vous avez un dossier 'backend' qui est un dépôt Git séparé,
-# nous ignorons son contenu 'node_modules' et son dossier '.git' interne.
-
-# Si le dossier backend est un dépôt séparé ou contient des node_modules propres:
-# 1. node_modules du backend :
-/backend/node_modules
-
-# 2. Si vous laissez le dossier backend dans votre dépôt principal
-#    (après avoir supprimé son .git interne - Recommandé)
-#    Alors, vous n'ajoutez rien ici, il est suivi.
-
-# SI vous voulez que le dépôt principal ignore TOUT le dossier backend :
-# backend/ 
-# (Décommenter uniquement si votre backend est dans un dépôt entièrement séparé)
+# --------------------------------
+# 4. Ignorer les projets séparés
+# --------------------------------
+# 🛑 SOLUTION À VOTRE PROBLÈME ACTUEL : 
+# Ignorer le dossier backend entier car il est géré dans un autre dépôt.
+# Ceci résout l'avertissement de "dépôt Git imbriqué".
+backend/
