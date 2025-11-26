@@ -1,0 +1,161 @@
+/* Importation de la police Google */
+@import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
+
+/* Réinitialisation générale */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Conteneur principal */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #f7f7f7; /* Fond doux */
+  padding: 20px;
+}
+
+/* Barre de retour */
+.login-header {
+  width: 100%;
+  max-width: 400px; /* Largeur maximale du conteneur */
+  text-align: right; /* Aligner le bouton "Retour" à droite */
+  margin-bottom: 20px;
+}
+
+/* Bouton Retour */
+.back-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #4f5143; /* Couleur foncée pour le texte */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* Espacement entre l'icône et le texte */
+  transition: color 0.3s ease;
+}
+
+.back-button:hover {
+  color: #3f4133; /* Effet hover sur le texte */
+}
+
+.back-button svg {
+  font-size: 1.2rem; /* Taille de l'icône */
+}
+
+/* Conteneur du formulaire */
+.login-form-container {
+  background: #ffffff; /* Fond blanc pour le formulaire */
+  padding: 25px; /* Espace interne */
+  border-radius: 8px; /* Bordures arrondies */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  width: 100%;
+  max-width: 400px; /* Largeur maximale */
+  text-align: center; /* Centrer le contenu */
+}
+
+/* Titre du formulaire */
+.login-form-container h2 {
+  font-size: 1.5rem;
+  color: #2d3748; /* Couleur sombre pour le titre */
+  margin-bottom: 20px;
+}
+
+/* Messages de succès ou d'erreur */
+.success-message {
+  color: #38a169; /* Vert pour les messages de succès */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: #e53e3e; /* Rouge pour les messages d'erreur */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Groupes de formulaires */
+.form-group {
+  margin-bottom: 15px;
+  width: 100%;
+  text-align: left; /* Aligner les labels à gauche */
+}
+
+/* Labels */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: #2d3748; /* Couleur sombre pour les labels */
+}
+
+/* Champs de saisie */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #e2e8f0; /* Bordure claire */
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #4f5143; /* Changement de couleur au focus */
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1); /* Petit effet de soulèvement */
+  outline: none;
+}
+
+/* Bouton de soumission */
+.submit-button {
+  width: 100%; /* Largeur complète */
+  padding: 10px;
+  font-size: 1rem;
+  color: rgb(0, 0, 0); /* Texte blanc */
+  background: linear-gradient(45deg, #e4d3c8, #f7ece3); /* Dégradé nude pour le bouton */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.submit-button:hover {
+  background: linear-gradient(45deg, #f7ece3, #e4d3c8); /* Inverser le dégradé au survol */
+  transform: scale(1.03); /* Petit effet de zoom */
+}
+
+/* Lien pour basculer entre connexion et inscription */
+.toggle-mode {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #4f5143; /* Couleur foncée pour le texte */
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.toggle-mode:hover {
+  color: #3f4133; /* Effet hover sur le texte */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-form-container {
+    padding: 15px; /* Réduire l'espace interne sur mobile */
+  }
+
+  .form-group input {
+    font-size: 0.9rem; /* Réduire la taille du texte */
+    padding: 8px; /* Réduire l'espace interne */
+  }
+
+  .submit-button {
+    font-size: 0.9rem; /* Réduire la taille du texte */
+    padding: 8px; /* Réduire l'espace interne */
+  }
+}

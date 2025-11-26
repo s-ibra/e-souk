@@ -1,0 +1,324 @@
+/* Importation de la police Google */
+@import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
+
+/* Conteneur principal */
+.boulangerie-public-container {
+  font-family: 'Arial', sans-serif;
+  background: #f7f7f7;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Titre principal */
+h1 {
+  font-size: 2.2rem;
+  color: #2d3748;
+  margin-bottom: 20px;
+}
+
+/* Barre supérieure avec les boutons */
+.top-bar {
+  display: flex;
+  justify-content: space-between; /* Distribuer les éléments uniformément */
+  align-items: center;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: calc(100% - 40px); /* Largeur adaptative */
+  max-width: 1200px; /* Largeur maximale */
+  margin: 0 auto; /* Centrer horizontalement */
+  padding: 0 20px; /* Ajouter un espace interne */
+}
+
+/* Conteneur pour l'icône du panier (à droite) */
+.cart-button-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Bouton Panier */
+.cart-toggle-button {
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  color: #4f5143;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.cart-toggle-button:hover {
+  transform: scale(1.1);
+  background: #e2e8f0;
+}
+
+.cart-toggle-button.open {
+  transform: rotate(45deg);
+}
+
+/* Compteur de produits dans le panier */
+.cart-item-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  color: white;
+  background: #e53e3e;
+  border-radius: 50%;
+}
+
+/* Conteneur pour le bouton de connexion/inscription (décalé légèrement à gauche) */
+.login-button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Ajoute un léger espace entre le bouton et d'autres éléments */
+}
+
+/* Bouton Connexion/Inscription */
+.login-button {
+  padding: 8px 16px;
+  font-size: 1rem;
+  color: #fff;
+  background: #4f5143;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espacement entre l'icône et le texte */
+}
+
+.login-button:hover {
+  background: #3f4133;
+}
+
+.login-button svg {
+  font-size: 1.2rem;
+}
+
+/* Onglet du Panier latéral droit */
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: -350px; /* Cache l'onglet hors écran */
+  width: 350px; /* Largeur de l'onglet */
+  height: 100%; /* Hauteur complète */
+  background: #f7fafc;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  z-index: 999; /* Afficher au-dessus des autres éléments */
+  overflow-y: auto; /* Scroll vertical si nécessaire */
+  transition: right 0.3s ease; /* Animation fluide */
+}
+
+.cart-sidebar.open {
+  right: 0; /* Afficher l'onglet */
+}
+
+/* En-tête du panier */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #e2e8f0;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.cart-header h2 {
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.cart-header h2 svg {
+  margin-right: 8px;
+  font-size: 1.5rem;
+}
+
+.close-cart-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #4f5143;
+}
+
+/* Contenu du panier */
+.cart-content {
+  padding: 15px;
+}
+
+/* Liste des produits dans le panier */
+.cart-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item span:first-child {
+  flex: 1;
+}
+
+.cart-item button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e53e3e;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.cart-item button:hover {
+  color: #c53030;
+}
+
+/* Total du panier */
+.cart-total {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* Message lorsque le panier est vide */
+.empty-cart {
+  text-align: center;
+  font-size: 1rem;
+  color: #4a5568;
+  margin-top: 20px;
+}
+
+/* Barre de recherche */
+.search-bar-container {
+  margin-top: 60px; /* Décalage pour éviter le chevauchement avec la barre supérieure */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar {
+  padding: 10px 16px;
+  font-size: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 300px;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+  border-color: #4f5143;
+  outline: none;
+}
+
+/* Liste des produits */
+.product-list-public {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  padding-right: 370px; /* Décalage pour éviter le chevauchement avec l'onglet du panier */
+}
+
+/* Cartes produits */
+.product-card-public {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #f7fafc;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.product-card-public:hover {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Images des produits */
+.product-image-public {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* Titres et descriptions */
+.product-card-public h3 {
+  font-size: 1.1rem;
+  color: #2d3748;
+  margin-bottom: 5px;
+}
+
+.product-card-public p {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+/* Bouton "Ajouter au Panier" */
+.add-to-cart-button {
+  margin-top: auto;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  color: #fff;
+  background: #4f5143;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+  background: #3f4133;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  /* Passage en disposition verticale sur mobile */
+  .top-bar {
+    flex-direction: column;
+    position: static; /* Retirer le positionnement fixe */
+    padding: 10px;
+  }
+
+  /* Ajuster l'espace entre les éléments */
+  .login-button-container {
+    margin-bottom: 10px;
+  }
+
+  /* L'onglet du panier prend toute la largeur */
+  .cart-sidebar {
+    width: 100%;
+    right: -100%; /* Cache l'onglet hors écran */
+  }
+
+  .cart-sidebar.open {
+    right: 0;
+  }
+
+  /* Retirer le décalage des produits sur mobile */
+  .product-list-public {
+    padding-right: 0;
+  }
+}

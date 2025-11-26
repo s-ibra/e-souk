@@ -1,0 +1,239 @@
+/* Importation de la police Google */
+@import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
+
+/* Réinitialisation générale */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Conteneur principal */
+.commerces-container {
+    padding: 20px;
+    background: #f7f7f7;
+    /* Permet le défilement du contenu si la grille déborde */
+    overflow-x: auto; 
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- HEADER et BARRE SUPÉRIEURE (NAVIGATION) --- */
+/* -------------------------------------------------------------------------- */
+
+.commerces-header {
+    margin-bottom: 20px;
+}
+
+/* Barre flexible pour les boutons (Haut de page) */
+.top-bar {
+    display: flex !important;
+    justify-content: space-between !important; 
+    align-items: center !important;
+    padding: 10px 0 !important;
+}
+
+.left-group, .right-group {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+/* Bouton Retour à l'accueil (Nude) */
+.back-button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    color: #4f5143;
+    background: linear-gradient(45deg, #e4d3c8, #f7ece3); 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex; 
+    align-items: center;
+    gap: 5px;
+}
+
+.back-button:hover {
+    background: linear-gradient(45deg, #f7ece3, #e4d3c8);
+    transform: scale(1.03);
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Bouton Se connecter (Marron foncé) */
+.login-button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    color: #fff;
+    background: #4f5143; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+    font-weight: normal;
+}
+
+.login-button:hover {
+    background: #3f4133; 
+}
+
+.login-button svg {
+    font-size: 1rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- LOGO, TITRE & FILTRES --- */
+/* -------------------------------------------------------------------------- */
+
+.logo-container-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    margin-bottom: 20px; 
+}
+
+.logo {
+    width: 200px; 
+    height: auto;
+    cursor: pointer; 
+    border-radius: 50%; 
+}
+
+.commerces-header h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.commerces-header p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4a5568;
+    margin-bottom: 20px;
+}
+
+/* Champ de recherche et Sélection de la catégorie */
+.search-filter-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.search-input {
+    padding: 10px;
+    font-size: 1rem;
+    width: 250px;
+    margin-right: 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+.category-select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- CARTES DES COMMERCES (FIX FLEXBOX 4x4 FORCÉ) --- */
+/* -------------------------------------------------------------------------- */
+
+.commerces-container .commerces-list {
+    display: flex !important; /* Utilisation de Flexbox */
+    flex-wrap: nowrap !important; /* ESSENTIEL : Empêche le passage à la ligne */
+    
+    /* 🚨 FIX : Définir une largeur minimale pour que les 4 cartes tiennent */
+    min-width: 1060px !important; /* 4 * 250px (min-width) + 3 * 20px (gap) + marge de sécurité */
+    width: fit-content; /* Permet à la grille d'être plus large que l'écran */
+    
+    justify-content: start !important; /* Aligner les cartes à gauche (le défilement se fait vers la droite) */
+    
+    gap: 20px !important; /* Réduire le gap pour aider à l'alignement */
+    margin: 40px auto !important; 
+    max-width: none !important; /* Aucune limite */
+}
+
+.commerces-container .commerce-card {
+    /* 🚨 FIX : Force chaque carte à prendre une largeur stricte, ne pas grandir/rétrécir */
+    flex: 0 0 250px !important; 
+    min-width: 250px !important;
+
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* Structure Flexbox pour aligner le contenu verticalement (dans la carte) */
+    display: flex !important; 
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    height: 100% !important; 
+}
+
+.commerce-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.commerce-image {
+    width: 100%;
+    height: 180px; 
+    object-fit: cover; 
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.commerce-card h2 {
+    font-size: 1.3rem;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.commerce-card p {
+    font-size: 1rem;
+    color: #4a5568;
+    margin-bottom: 15px;
+    flex-grow: 1; 
+}
+
+.view-button {
+    padding: 8px 16px;
+    font-size: 1rem;
+    color: #fff;
+    background: #4f5143; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: auto;
+}
+
+.view-button:hover {
+    background: #3f4133;
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- IMAGE DE BAS DE PAGE --- */
+/* -------------------------------------------------------------------------- */
+
+.footer-image-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.footer-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
