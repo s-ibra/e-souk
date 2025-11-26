@@ -130,7 +130,7 @@ const Commerces = () => {
             <img 
                 src={commerce.image} 
                 // 🔑 CORRECTION ESLINT (Ligne 136) : alt non redondant
-                alt={`Photo d'illustration du commerce ${commerce.name}`} 
+                alt={`illustration du commerce ${commerce.name}`} 
                 className="commerce-image" 
             />
             <h2>{commerce.name}</h2>

@@ -229,7 +229,7 @@ const MaBoulangerieAdmin = () => {
                                     <label>Image Actuelle</label>
                                     <img 
                                         src={editProduct.currentImage} 
-                                        alt={`Image actuelle du produit`} 
+                                        alt={`Aperçu actuel du produit`} 
                                         className="current-image-preview"
                                     />
                                     <label htmlFor="edit-image">Remplacer l'Image (Facultatif)</label>
@@ -290,7 +290,7 @@ const MaBoulangerieAdmin = () => {
                                 <img
                                     src={p.image} 
                                     // 🔑 CORRECTION ESLINT (Ligne 232): alt non redondant
-                                    alt={`Image du produit ${p.name}`} 
+                                    alt={`Produit ${p.name}`} 
                                     className="commerce-image" 
                                 />
                                 <div className="product-info">
@@ -309,7 +309,7 @@ const MaBoulangerieAdmin = () => {
                             </div>
                         ))}
                     </div>
-                </section>
+                </section>&&
                 
             </div>
         </div>
