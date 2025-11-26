@@ -84,14 +84,14 @@ const Commerces = () => {
               <FaArrowLeft /> Retour à l'accueil
             </button>
           </div>
-
+{/* * 
           <div className="right-group">
             <button className="login-button" onClick={handleLoginRedirect}>
               <FaUser /> Se connecter
             </button>
           </div>
         </div> 
-
+*/}
         <div className="logo-container-centered">
           <img src={logo} alt="Logo e-souk" className="logo" onClick={() => navigate('/')} />
         </div>
