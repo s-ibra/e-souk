@@ -17,7 +17,7 @@ const commercesData = [
     category: 'Boulangerie',
     description: 'Boulangerie artisanale avec des produits bio et faits maison.',
     image: image1,
-    link: '/boulangerie-publique',
+    link: '/boulangerie-publique', 
   },
   {
     id: 2,
@@ -77,17 +77,14 @@ const Commerces = () => {
     <div className="commerces-container">
       
       <header className="commerces-header">
-        {/* 🎯 NOUVEAU : La barre supérieure Flexbox pour les boutons */}
         <div className="top-bar">
           
-          {/* GROUPE GAUCHE : Bouton Retour à l'accueil */}
           <div className="left-group">
             <button className="back-button" onClick={handleGoHome}>
               <FaArrowLeft /> Retour à l'accueil
             </button>
           </div>
 
-          {/* GROUPE DROIT : Bouton Se connecter */}
           <div className="right-group">
             <button className="login-button" onClick={handleLoginRedirect}>
               <FaUser /> Se connecter
@@ -95,16 +92,13 @@ const Commerces = () => {
           </div>
         </div> 
 
-        {/* Conteneur pour le logo centré (Maintenant sous la top-bar) */}
         <div className="logo-container-centered">
           <img src={logo} alt="Logo e-souk" className="logo" onClick={() => navigate('/')} />
         </div>
 
-        {/* Titre principal et filtres (Centrés en bas du header) */}
         <h1>Tous les commerces</h1>
         <p>Explorez nos commerces et trouvez des produits éthiques et made in France.</p>
 
-        {/* Champ de recherche et Sélection de la catégorie - Affichez-les avec un conteneur pour le centrage si besoin */}
         <div style={{ textAlign: 'center', margin: '20px 0' }}>
           <input
             type="text"
@@ -135,8 +129,8 @@ const Commerces = () => {
           <div key={commerce.id} className="commerce-card" onClick={() => handleClick(commerce.link)}>
             <img 
                 src={commerce.image} 
-                // 🔑 CORRECTION : Utiliser un alt descriptif pour éviter la redondance avec le <h2>
-                alt={`Photo du commerce ${commerce.name}`} 
+                // 🔑 CORRECTION ESLINT (Ligne 136) : alt non redondant
+                alt={`Photo d'illustration du commerce ${commerce.name}`} 
                 className="commerce-image" 
             />
             <h2>{commerce.name}</h2>

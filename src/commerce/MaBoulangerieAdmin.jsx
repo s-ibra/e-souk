@@ -32,8 +32,7 @@ const MaBoulangerieAdmin = () => {
         currentImage: '', 
     });
 
-    // 🔑 CORRECTION ESLINT : Stabilisation de la fonction fetchProducts avec useCallback
-    // Cela empêche la fonction de changer à chaque rendu, permettant de la mettre dans useEffect.
+    // CORRECTION ESLINT : Stabilisation de la fonction fetchProducts avec useCallback
     const fetchProducts = useCallback(async () => {
         try {
             const response = await axios.get(API_URL);
@@ -41,14 +40,13 @@ const MaBoulangerieAdmin = () => {
             setError('');
         } catch (err) {
             console.error('Erreur lors du chargement des produits.', err);
-            // Vérification simple (peut ignorer products.length comme dépendance dans useCallback)
             if (products.length === 0) { 
                 setError('Impossible de charger les produits. Vérifiez la connexion au serveur.');
             }
         }
-    }, [API_URL, products.length]); // Inclure API_URL pour la stabilité de l'URL, products.length pour recharger si la liste devient vide.
+    }, [API_URL, products.length]); 
 
-    // 🔑 CORRECTION ESLINT : Le useEffect dépend maintenant de la version stable de fetchProducts
+    // CORRECTION ESLINT : Le useEffect dépend maintenant de la version stable de fetchProducts
     useEffect(() => {
         fetchProducts();
     }, [fetchProducts]);
@@ -231,8 +229,7 @@ const MaBoulangerieAdmin = () => {
                                     <label>Image Actuelle</label>
                                     <img 
                                         src={editProduct.currentImage} 
-                                        // 🔑 Correction potentielle d'alt : utiliser un alt descriptif pour éviter l'erreur "Redundant alt attribute"
-                                        alt={`Image actuelle du produit ${editProduct.name}`} 
+                                        alt={`Image actuelle du produit`} 
                                         className="current-image-preview"
                                     />
                                     <label htmlFor="edit-image">Remplacer l'Image (Facultatif)</label>
@@ -292,7 +289,9 @@ const MaBoulangerieAdmin = () => {
                             <div key={p._id} className="product-card">
                                 <img
                                     src={p.image} 
-                                    alt={p.name}
+                                    // 🔑 CORRECTION ESLINT (Ligne 232): alt non redondant
+                                    alt={`Image du produit ${p.name}`} 
+                                    className="commerce-image" 
                                 />
                                 <div className="product-info">
                                     <h3>{p.name}</h3>
