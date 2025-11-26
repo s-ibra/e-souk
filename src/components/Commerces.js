@@ -7,7 +7,6 @@ import image3 from '../assets/image3.jpg';
 import image4 from '../assets/image4.jpg';
 import pageImage from '../assets/page.jpg';
 import logo from '../assets/logo_souk.jpg'; 
-// Correction : Remplacer FaUser par FaSignInAlt pour le bouton de connexion si vous voulez une flèche/un symbole de connexion
 import { FaUser, FaArrowLeft } from 'react-icons/fa'; 
 
 // Données des commerces - LIENS CORRIGÉS (inchangés)
@@ -18,7 +17,7 @@ const commercesData = [
     category: 'Boulangerie',
     description: 'Boulangerie artisanale avec des produits bio et faits maison.',
     image: image1,
-    link: '/boulangerie-publique', // Lien correct
+    link: '/boulangerie-publique',
   },
   {
     id: 2,
@@ -26,7 +25,7 @@ const commercesData = [
     category: 'Pâtisserie',
     description: 'Gâteau fait maison pour les occasions.',
     image: image2,
-    link: '/cake-publique', // Lien corrigé
+    link: '/cake-publique', 
   },
   {
     id: 3,
@@ -34,7 +33,7 @@ const commercesData = [
     category: 'Bien-être',
     description: 'Produits de bien-être et soins pour le corps 100% naturels.',
     image: image3,
-    link: '/savons-publique', // Lien corrigé
+    link: '/savons-publique', 
   },
   {
     id: 4,
@@ -42,7 +41,7 @@ const commercesData = [
     category: 'Bébé',
     description: 'Produits pour bébé, adapté à votre bébé.',
     image: image4,
-    link: '/periculture-publique', // Lien corrigé
+    link: '/periculture-publique', 
   },
 ];
 
@@ -83,7 +82,6 @@ const Commerces = () => {
           
           {/* GROUPE GAUCHE : Bouton Retour à l'accueil */}
           <div className="left-group">
-            {/* Utilisation de la classe back-button, qui était .back-to-home dans votre CSS précédent */}
             <button className="back-button" onClick={handleGoHome}>
               <FaArrowLeft /> Retour à l'accueil
             </button>
@@ -99,7 +97,7 @@ const Commerces = () => {
 
         {/* Conteneur pour le logo centré (Maintenant sous la top-bar) */}
         <div className="logo-container-centered">
-          <img src={logo} alt="e-souk logo" className="logo" onClick={() => navigate('/')} />
+          <img src={logo} alt="Logo e-souk" className="logo" onClick={() => navigate('/')} />
         </div>
 
         {/* Titre principal et filtres (Centrés en bas du header) */}
@@ -135,7 +133,12 @@ const Commerces = () => {
       <div className="commerces-list">
         {filteredCommerces.map((commerce) => (
           <div key={commerce.id} className="commerce-card" onClick={() => handleClick(commerce.link)}>
-            <img src={commerce.image} alt={commerce.name} className="commerce-image" />
+            <img 
+                src={commerce.image} 
+                // 🔑 CORRECTION : Utiliser un alt descriptif pour éviter la redondance avec le <h2>
+                alt={`Photo du commerce ${commerce.name}`} 
+                className="commerce-image" 
+            />
             <h2>{commerce.name}</h2>
             <p>{commerce.description}</p>
             <button className="view-button">Voir plus</button>
@@ -145,7 +148,7 @@ const Commerces = () => {
 
       {/* Image en bas de page */}
       <div className="footer-image-container">
-        <img src={pageImage} alt="Page Image" className="footer-image" />
+        <img src={pageImage} alt="Illustration de produits artisanaux" className="footer-image" />
       </div>
     </div>
   );

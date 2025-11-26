@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaPlusCircle, FaSignOutAlt, FaEdit, FaTrash } from 'react-icons/fa';
 import './MaBoulangerieAdmin.css';
 
+// Utilisez la variable d'environnement pour l'URL de base de l'API (comme discuté)
+const BASE_API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+
 const MaBoulangerieAdmin = () => {
-    // 🔑 CLÉ DU DÉPLOIEMENT : Définit l'URL de base de l'API.
-    // En production (Netlify), REACT_APP_BACKEND_URL utilisera l'URL Render (e.g., https://e-souk-backend.onrender.com).
-    // En développement local, elle reviendra à 'http://localhost:5001'.
-    const BASE_API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
-    const API_URL = `${BASE_API_URL}/api/products`; 
-    
     // --- États pour l'Ajout ---
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -22,6 +19,7 @@ const MaBoulangerieAdmin = () => {
     const [success, setSuccess] = useState('');
     const [products, setProducts] = useState([]); 
     const navigate = useNavigate();
+    const API_URL = `${BASE_API_URL}/api/products`; 
 
     // --- États pour l'Édition ---
     const [isEditing, setIsEditing] = useState(false);
@@ -34,24 +32,26 @@ const MaBoulangerieAdmin = () => {
         currentImage: '', 
     });
 
-    // --- Fonctions de Récupération ---
-    const fetchProducts = async () => {
+    // 🔑 CORRECTION ESLINT : Stabilisation de la fonction fetchProducts avec useCallback
+    // Cela empêche la fonction de changer à chaque rendu, permettant de la mettre dans useEffect.
+    const fetchProducts = useCallback(async () => {
         try {
-            // Utilise l'API_URL dynamique
-            const response = await axios.get(API_URL); 
+            const response = await axios.get(API_URL);
             setProducts(response.data);
             setError('');
         } catch (err) {
             console.error('Erreur lors du chargement des produits.', err);
-            if (products.length === 0) {
-                setError('Impossible de charger les produits. Vérifiez la connexion au serveur API.');
+            // Vérification simple (peut ignorer products.length comme dépendance dans useCallback)
+            if (products.length === 0) { 
+                setError('Impossible de charger les produits. Vérifiez la connexion au serveur.');
             }
         }
-    };
+    }, [API_URL, products.length]); // Inclure API_URL pour la stabilité de l'URL, products.length pour recharger si la liste devient vide.
 
+    // 🔑 CORRECTION ESLINT : Le useEffect dépend maintenant de la version stable de fetchProducts
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [fetchProducts]);
 
     // --- Gestion du Changement de Fichier ---
     const handleImageChange = (e) => {
@@ -88,7 +88,6 @@ const MaBoulangerieAdmin = () => {
         formData.append('image', imageFile); 
 
         try {
-            // Utilise l'API_URL dynamique
             const response = await axios.post(API_URL, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -147,7 +146,6 @@ const MaBoulangerieAdmin = () => {
         }
 
         try {
-            // Utilise l'API_URL dynamique
             const response = await axios.put(`${API_URL}/${editProduct._id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -175,7 +173,6 @@ const MaBoulangerieAdmin = () => {
         }
 
         try {
-            // Utilise l'API_URL dynamique
             await axios.delete(`${API_URL}/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -234,7 +231,8 @@ const MaBoulangerieAdmin = () => {
                                     <label>Image Actuelle</label>
                                     <img 
                                         src={editProduct.currentImage} 
-                                        alt="Image actuelle" 
+                                        // 🔑 Correction potentielle d'alt : utiliser un alt descriptif pour éviter l'erreur "Redundant alt attribute"
+                                        alt={`Image actuelle du produit ${editProduct.name}`} 
                                         className="current-image-preview"
                                     />
                                     <label htmlFor="edit-image">Remplacer l'Image (Facultatif)</label>

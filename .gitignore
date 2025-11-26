@@ -1,44 +1,63 @@
-# Voir https://help.github.com/articles/ignoring-files/ pour plus d'informations sur l'ignorance des fichiers.
-
-# --------------------------
-# DEPENDANCES & BUILD (GENERAL)
-# --------------------------
-
-# Dépendances Node pour le backend (racine du dépôt)
+# ------------------------------------
+# 1. DEPENDANCES (IGNORER)
+# ------------------------------------
+# Dossiers créés par npm/yarn/pnpm pour stocker les dépendances.
 /node_modules
-.pnp
-.pnp.js
+/package-lock.json
+/yarn.lock
+/npm-debug.log*
+/yarn-debug.log*
+/yarn-error.log*
 
-# Build du backend (si vous utilisez un outil de transpilation)
+# ------------------------------------
+# 2. FICHIERS DE BUILD ET TEMPORAIRES (IGNORER)
+# ------------------------------------
+# Dossier de build du frontend (Netlify utilise celui-ci)
 /build
+/dist
+/out
 
-# --------------------------
-# FRONTEND (Exemple: si dans un dossier 'client' ou 'frontend')
-# --------------------------
+# Fichiers de cache et IDE/OS
+.DS_Store
+*.swp
+*.log
+.eslintcache
 
-# Dépendances et build du frontend (Dossier React)
-/client/node_modules
-/client/build
-/client/coverage
-/client/.DS_Store
+# Cache de Create React App
+.cache
 
-# --------------------------
-# FICHIERS DE CONFIGURATION SECRETS
-# --------------------------
-
-# Variables d'environnement pour le backend (crucial pour la sécurité !)
+# ------------------------------------
+# 3. FICHIERS ENVIRONNEMENT ET SECRETS (OBLIGATOIRE)
+# ------------------------------------
+# **N'envoyez JAMAIS votre fichier de variables d'environnement
+# contenant des clés API, secrets JWT ou chaînes de connexion DB.**
 .env
-
-# Variables d'environnement pour le frontend (standard CRA)
 .env.local
 .env.development.local
-.env.test.local
 .env.production.local
 
-# --------------------------
-# MISC
-# --------------------------
-.DS_Store
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ------------------------------------
+# 4. CONFIGURATION DE DEPLOIEMENT NETLIFY/VSC
+# ------------------------------------
+# Ces fichiers sont souvent gérés automatiquement ou localement.
+.netlify/
+.vscode/
+
+# ------------------------------------
+# 5. STRUCTURE DU PROJET (MONOREPO LÉGER)
+# ------------------------------------
+# 🛑 CORRECTION CLÉ POUR L'AVERTISSEMENT GIT IMBRIQUÉ
+# Si vous avez un dossier 'backend' qui est un dépôt Git séparé,
+# nous ignorons son contenu 'node_modules' et son dossier '.git' interne.
+
+# Si le dossier backend est un dépôt séparé ou contient des node_modules propres:
+# 1. node_modules du backend :
+/backend/node_modules
+
+# 2. Si vous laissez le dossier backend dans votre dépôt principal
+#    (après avoir supprimé son .git interne - Recommandé)
+#    Alors, vous n'ajoutez rien ici, il est suivi.
+
+# SI vous voulez que le dépôt principal ignore TOUT le dossier backend :
+# backend/ 
+# (Décommenter uniquement si votre backend est dans un dépôt entièrement séparé)
