@@ -284,7 +284,7 @@ const MaBoulangerieAdmin = () => {
     return (
         <div className="admin-container">
             <header className="admin-header">
-                <h1>🥖 Administration de Ma Boulangerie</h1>
+                <h1> Administration de Ma Boulangerie</h1>
                 <button onClick={handleLogout} className="logout-button">
                     Déconnexion
                 </button>
