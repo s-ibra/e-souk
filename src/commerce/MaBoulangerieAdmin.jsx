@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-// URL de base de votre API Render.
-// ASSUREZ-VOUS QUE C'EST LA BONNE URL EN PRODUCTION
+// URL de base de votre API Render. (À VÉRIFIER)
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
 
-// État initial d'un nouveau produit (pour le formulaire d'ajout)
+// État initial d'un nouveau produit
 const initialProductState = {
     name: '',
     description: '',
@@ -39,7 +38,6 @@ const MaBoulangerieAdmin = () => {
     useEffect(() => {
         if (token) {
             setIsAuthenticated(true);
-            // Vérification simple que le token est au moins présent
         }
     }, [token]);
 
@@ -81,7 +79,7 @@ const MaBoulangerieAdmin = () => {
     const getConfig = () => ({
         headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data', // Nécessaire pour l'envoi de fichiers
+            'Content-Type': 'multipart/form-data', 
         },
     });
 
@@ -95,7 +93,7 @@ const MaBoulangerieAdmin = () => {
         setImageFile(e.target.files[0]);
     };
 
-    // --- AJOUT DE PRODUIT (POST) ---
+    // --- AJOUT ET MODIFICATION DE PRODUIT (POST/PUT) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
@@ -108,7 +106,6 @@ const MaBoulangerieAdmin = () => {
         data.append('description', formData.description);
         data.append('price', parseFloat(formData.price));
         
-        // La clé 'image' doit correspondre à `upload.single('image')` dans Express
         if (imageFile) {
             data.append('image', imageFile);
         } else if (!isEditing) {
@@ -136,7 +133,6 @@ const MaBoulangerieAdmin = () => {
             
         } catch (err) {
             console.error("Erreur lors de l'ajout/modification:", err.response ? err.response.data : err.message);
-            // ⚠️ Ceci est la clé pour afficher les erreurs 500 ou 400 du serveur Render/Cloudinary
             const errMsg = err.response && err.response.data && err.response.data.error 
                 ? `Erreur: ${err.response.data.error}`
                 : "Erreur inconnue lors de l'ajout. (Serveur/Token invalide)";
@@ -147,7 +143,7 @@ const MaBoulangerieAdmin = () => {
         }
     };
     
-    // --- ÉDITION DE PRODUIT (PUT) ---
+    // --- DÉMARRER ÉDITION ---
     const startEditing = (product) => {
         setIsEditing(true);
         setEditingProduct(product);
@@ -156,8 +152,8 @@ const MaBoulangerieAdmin = () => {
             description: product.description,
             price: product.price,
         });
-        setImageFile(null); // Réinitialiser le fichier
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Remonter au formulaire
+        setImageFile(null); 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const cancelEditing = () => {
@@ -173,7 +169,6 @@ const MaBoulangerieAdmin = () => {
         if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) return;
 
         try {
-            // L'opération de suppression doit AUSSI s'authentifier
             await axios.delete(`${API_BASE_URL}/products/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -293,7 +288,8 @@ const MaBoulangerieAdmin = () => {
                         {editingProduct.image && (
                             <>
                                 <label>Image Actuelle:</label>
-                                <img src={editingProduct.image} alt="Actuel" className="current-image-preview" />
+                                {/* Alt corrigé: ne contient pas le mot 'image' ni 'photo' */}
+                                <img src={editingProduct.image} alt={`Produit actuel ${editingProduct.name}`} className="current-image-preview" />
                             </>
                         )}
 
@@ -357,21 +353,19 @@ const MaBoulangerieAdmin = () => {
                         products.map((p) => (
                             <div key={p._id} className="product-card">
                                 
-                                {/* 🔑 STRUCTURE CLÉ pour images non tronquées (CSS: object-fit: contain) */}
+                                {/* 🔑 STRUCTURE CLÉ pour images non tronquées */}
                                 <div className="product-image-container">
                                     <img 
                                         src={p.image} 
-                                        alt={`Image de ${p.name}`} 
-                                        // className="commerce-image" (si vous utilisiez une classe)
+                                        /* 🔑 Alt corrigé: ne contient pas le mot 'image' ni 'photo' */
+                                        alt={`Produit ${p.name}`} 
                                     />
                                 </div>
-                                {/* 🔑 FIN DE LA STRUCTURE CLÉ */}
+                                
 
                                 <div className="product-info">
                                     <h3>{p.name}</h3>
-                                    {/* Utilisation de || '' pour éviter les erreurs si la description est null */}
                                     <p className="description">{p.description || ''}</p> 
-                                    {/* toLocaleString pour un meilleur affichage monétaire */}
                                     <p className="price">{p.price?.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</p>
                                 </div>
                                 
