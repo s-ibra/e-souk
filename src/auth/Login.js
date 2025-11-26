@@ -4,6 +4,10 @@ import axios from 'axios';
 import './Login.css';
 import { FaTimes } from 'react-icons/fa';
 
+// 🔑 CORRECTION CRITIQUE : Définir l'URL de l'API
+// Utilise REACT_APP_BACKEND_URL (définie sur Netlify) ou localhost:5001 (pour le dev local)
+const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,7 +57,8 @@ const Login = () => {
   const handleLogin = async () => {
     setError(''); 
     try {
-      const response = await axios.post('http://localhost:5001/api/login', {
+        // 💡 Utilisation de API_URL
+      const response = await axios.post(`${API_URL}/api/login`, {
         email,
         password,
       });
@@ -85,7 +90,8 @@ const Login = () => {
     }
 
     try {
-      await axios.post('http://localhost:5001/api/register', {
+        // 💡 Utilisation de API_URL
+      await axios.post(`${API_URL}/api/register`, {
         email,
         password,
       });
