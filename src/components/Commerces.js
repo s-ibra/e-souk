@@ -7,7 +7,7 @@ import image3 from '../assets/image3.jpg';
 import image4 from '../assets/image4.jpg';
 import pageImage from '../assets/page.jpg';
 import logo from '../assets/logo_souk.jpg'; 
-import { FaUser, FaArrowLeft } from 'react-icons/fa'; 
+import { FaArrowLeft } from 'react-icons/fa'; // 🔑 CORRECTION : FaUser retiré
 
 // Données des commerces - LIENS CORRIGÉS
 const commercesData = [
@@ -63,10 +63,7 @@ const Commerces = () => {
   // Gestion du clic sur un commerce
   const handleClick = (link) => navigate(link); 
 
-  // Redirection vers la page de connexion
-  const handleLoginRedirect = () => {
-    navigate('/login'); 
-  };
+  // 🔑 CORRECTION : handleLoginRedirect retiré car inutilisé
 
   // Redirection vers l'accueil (Bouton Retour)
   const handleGoHome = () => {
@@ -85,7 +82,6 @@ const Commerces = () => {
             </button>
           </div>
 
-          {/* Le bloc right-group contenant le bouton "Se connecter" a été supprimé ici. */}
         </div> 
 
         <div className="logo-container-centered">
@@ -138,12 +134,12 @@ const Commerces = () => {
             <button className="view-button">Voir plus</button>
           </div>
         ))}
-      </div>
+        </div>
 
       {/* Image en bas de page */}
       <div className="footer-image-container">
         <img src={pageImage} alt="Illustration de produits artisanaux" className="footer-image" />
-        </div>
+      </div>
     </div>
   );
 };
