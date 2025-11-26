@@ -5,15 +5,15 @@
 
 /* --- Variables de couleur --- */
 :root {
-    --color-dark-text: #2d3748;      /* Texte principal */
-    --color-primary: #4f5143;        /* Vert/Marron foncé (Boutons, titres) */
-    --color-secondary: #e4d3c8;      /* Beige clair (Accents) */
-    --color-light-bg: #f7f7f7;       /* Arrière-plan général */
-    --color-success: #4CAF50;
-    --color-error: #F44336;
-    --color-delete: #d9534f;         /* Rouge suppression */
-    --color-edit: #007bff;           /* Bleu modification */
-    --shadow-light: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    --color-dark-text: #2d3748; /* Texte principal */
+    --color-primary: #4f5143; /* Vert/Marron foncé (Boutons, titres) */
+    --color-secondary: #e4d3c8; /* Beige clair (Accents) */
+    --color-light-bg: #f7f7f7; /* Arrière-plan général */
+    --color-success: #4CAF50;
+    --color-error: #F44336;
+    --color-delete: #d9534f; /* Rouge suppression */
+    --color-edit: #007bff; /* Bleu modification */
+    --shadow-light: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -239,26 +239,28 @@ hr {
 
 /*
     *** CORRECTION CLÉ POUR AFFICHER L'IMAGE EN ENTIER ***
+    (Ceci nécessite que vous ayez un <div> avec la classe .product-image-container
+     autour de votre balise <img> dans votre fichier JSX/React)
 */
 
-/* Conteneur pour forcer le ratio (facultatif mais recommandé) */
+/* 1. Conteneur pour forcer le ratio d'aspect */
 .product-image-container {
     position: relative;
     width: 100%;
-    /* Règle pour un ratio 16:9 (100 / 16 * 9 = 56.25%) ou carré 1:1 (100%) */
-    padding-top: 65%; /* Utilisation de 65% pour un ratio d'aspect fixe */
-    background-color: #eee; /* Fond gris pour les marges (si l'image n'est pas 100%) */
+    /* Ratio d'aspect : 65% pour un format légèrement horizontal (16:10 environ) */
+    padding-top: 65%; 
+    background-color: #eee; 
 }
 
+/* 2. Image à l'intérieur du conteneur */
 .product-card img {
-    /* Positionner l'image pour qu'elle remplisse le conteneur ratio */
-    position: absolute;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* 🔑 L'attribut clé : Afficher l'image en entier, créant des marges (bars) si nécessaire */
-    **object-fit: contain;**     /* Retirer la hauteur fixe de 200px car elle est gérée par padding-top */
+    /* 🔑 Attribut clé : Affiche l'image en entier, sans la couper. */
+    **object-fit: contain;**
 }
 
 /*

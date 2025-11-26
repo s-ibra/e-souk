@@ -1,317 +1,399 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { FaPlusCircle, FaSignOutAlt, FaEdit, FaTrash } from 'react-icons/fa';
-import './MaBoulangerieAdmin.css';
 
-// Utilisez la variable d'environnement pour l'URL de base de l'API (comme discuté)
-const BASE_API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+// URL de base de votre API Render.
+// ASSUREZ-VOUS QUE C'EST LA BONNE URL EN PRODUCTION
+const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
+
+// État initial d'un nouveau produit (pour le formulaire d'ajout)
+const initialProductState = {
+    name: '',
+    description: '',
+    price: '',
+};
+
+// =========================================================================
+//                  MAIN COMPONENT: MA BOULANGERIE ADMIN
+// =========================================================================
 
 const MaBoulangerieAdmin = () => {
-    // --- États pour l'Ajout ---
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [imageFile, setImageFile] = useState(null); 
+    // --- États de gestion ---
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [token, setToken] = useState(localStorage.getItem('adminToken') || '');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     
-    // --- États Généraux ---
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const [products, setProducts] = useState([]); 
-    const navigate = useNavigate();
-    const API_URL = `${BASE_API_URL}/api/products`; 
-
-    // --- États pour l'Édition ---
+    // --- États des produits ---
+    const [products, setProducts] = useState([]);
+    const [formData, setFormData] = useState(initialProductState);
+    const [imageFile, setImageFile] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [editProduct, setEditProduct] = useState({
-        _id: null,
-        name: '',
-        description: '',
-        price: '',
-        image: null, 
-        currentImage: '', 
-    });
+    const [editingProduct, setEditingProduct] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // CORRECTION ESLINT : Stabilisation de la fonction fetchProducts avec useCallback
+    // --- États des messages ---
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+
+    // --- Vérification d'Authentification (Simulée avec le Token) ---
+    useEffect(() => {
+        if (token) {
+            setIsAuthenticated(true);
+            // Vérification simple que le token est au moins présent
+        }
+    }, [token]);
+
+    // --- Fonctions de gestion des messages ---
+    const showMessage = (msg, isError = false) => {
+        if (isError) {
+            setError(msg);
+            setMessage('');
+        } else {
+            setMessage(msg);
+            setError('');
+        }
+        setTimeout(() => {
+            setMessage('');
+            setError('');
+        }, 5000);
+    };
+
+    // --- GESTION DES REQUÊTES API (CRUD) ---
+
+    // Récupérer la liste des produits
     const fetchProducts = useCallback(async () => {
         try {
-            const response = await axios.get(API_URL);
+            const response = await axios.get(`${API_BASE_URL}/products`);
             setProducts(response.data);
-            setError('');
         } catch (err) {
-            console.error('Erreur lors du chargement des produits.', err);
-            if (products.length === 0) { 
-                setError('Impossible de charger les produits. Vérifiez la connexion au serveur.');
-            }
+            showMessage("Erreur lors de la récupération des produits.", true);
+            console.error("Fetch products error:", err);
         }
-    }, [API_URL, products.length]); 
+    }, []);
 
-    // CORRECTION ESLINT : Le useEffect dépend maintenant de la version stable de fetchProducts
     useEffect(() => {
-        fetchProducts();
-    }, [fetchProducts]);
+        if (isAuthenticated) {
+            fetchProducts();
+        }
+    }, [isAuthenticated, fetchProducts]);
 
-    // --- Gestion du Changement de Fichier ---
-    const handleImageChange = (e) => {
+    // Headers avec le Token d'authentification
+    const getConfig = () => ({
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data', // Nécessaire pour l'envoi de fichiers
+        },
+    });
+
+    // Gestion du changement de champs
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    // Gestion du fichier image
+    const handleFileChange = (e) => {
         setImageFile(e.target.files[0]);
     };
 
-    // --- Gestion du Changement de Fichier (Édition) ---
-    const handleEditImageChange = (e) => {
-        setEditProduct({ ...editProduct, image: e.target.files[0] });
-    };
-
-    // --- Fonction de Soumission du Formulaire (Ajout) ---
-    const handleAddProduct = async (e) => {
+    // --- AJOUT DE PRODUIT (POST) ---
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
         setError('');
-        setSuccess('');
-
-        if (!name || !description || !price || !imageFile) {
-            setError('Tous les champs (Nom, Description, Prix, Image) doivent être remplis.');
+        
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('description', formData.description);
+        data.append('price', parseFloat(formData.price));
+        
+        // La clé 'image' doit correspondre à `upload.single('image')` dans Express
+        if (imageFile) {
+            data.append('image', imageFile);
+        } else if (!isEditing) {
+            showMessage("L'image est requise pour l'ajout.", true);
+            setIsSubmitting(false);
             return;
         }
-
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('Vous devez être connecté pour ajouter un produit. Redirection...');
-            setTimeout(() => navigate('/login'), 1500);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('description', description);
-        formData.append('price', price);
-        formData.append('image', imageFile); 
 
         try {
-            const response = await axios.post(API_URL, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, 
-                },
-            });
-
-            setSuccess(`Produit "${response.data.name}" ajouté avec succès!`);
+            if (isEditing) {
+                // Modification
+                await axios.put(`${API_BASE_URL}/products/${editingProduct._id}`, data, getConfig());
+                showMessage("Produit modifié avec succès !");
+                setIsEditing(false);
+                setEditingProduct(null);
+            } else {
+                // Ajout
+                await axios.post(`${API_BASE_URL}/products`, data, getConfig());
+                showMessage("Produit ajouté avec succès !");
+            }
             
-            setName('');
-            setDescription('');
-            setPrice('');
-            setImageFile(null); 
-            fetchProducts(); 
-
+            setFormData(initialProductState);
+            setImageFile(null);
+            fetchProducts();
+            
         } catch (err) {
-            console.error('Erreur lors de l\'ajout du produit:', err.response?.data || err);
-            setError(err.response?.data.error || 'Erreur inconnue lors de l\'ajout. (Serveur/Token invalide)');
+            console.error("Erreur lors de l'ajout/modification:", err.response ? err.response.data : err.message);
+            // ⚠️ Ceci est la clé pour afficher les erreurs 500 ou 400 du serveur Render/Cloudinary
+            const errMsg = err.response && err.response.data && err.response.data.error 
+                ? `Erreur: ${err.response.data.error}`
+                : "Erreur inconnue lors de l'ajout. (Serveur/Token invalide)";
+
+            showMessage(errMsg, true);
+        } finally {
+            setIsSubmitting(false);
         }
     };
     
-    // --- Fonction pour commencer l'édition
-    const handleEditClick = (product) => {
+    // --- ÉDITION DE PRODUIT (PUT) ---
+    const startEditing = (product) => {
         setIsEditing(true);
-        setSuccess('');
-        setError('');
-        setEditProduct({
-            _id: product._id,
+        setEditingProduct(product);
+        setFormData({
             name: product.name,
             description: product.description,
             price: product.price,
-            image: null, 
-            currentImage: product.image, 
         });
+        setImageFile(null); // Réinitialiser le fichier
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Remonter au formulaire
     };
 
-    // --- Fonction pour soumettre la modification
-    const handleSubmitEdit = async (e) => {
-        e.preventDefault();
+    const cancelEditing = () => {
+        setIsEditing(false);
+        setEditingProduct(null);
+        setFormData(initialProductState);
+        setImageFile(null);
         setError('');
-        setSuccess('');
-
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('Vous devez être connecté pour modifier un produit. Redirection...');
-            setTimeout(() => navigate('/login'), 1500);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('name', editProduct.name);
-        formData.append('description', editProduct.description);
-        formData.append('price', editProduct.price);
-        
-        if (editProduct.image) {
-            formData.append('image', editProduct.image);
-        }
-
-        try {
-            const response = await axios.put(`${API_URL}/${editProduct._id}`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, 
-                },
-            });
-            setSuccess(`Produit "${response.data.name}" modifié avec succès!`);
-            setIsEditing(false);
-            fetchProducts();
-
-        } catch (err) {
-            console.error('Erreur lors de la modification du produit:', err.response?.data || err);
-            setError(err.response?.data.error || 'Erreur inconnue lors de la modification.');
-        }
     };
 
-    // --- Fonction pour supprimer un produit
-    const handleDeleteProduct = async (id) => {
+    // --- SUPPRESSION DE PRODUIT (DELETE) ---
+    const handleDelete = async (id) => {
         if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) return;
 
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('Vous devez être connecté pour supprimer un produit. Redirection...');
-            setTimeout(() => navigate('/login'), 1500);
-            return;
-        }
-
         try {
-            await axios.delete(`${API_URL}/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, 
-                },
+            // L'opération de suppression doit AUSSI s'authentifier
+            await axios.delete(`${API_BASE_URL}/products/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
-            setSuccess(`Produit supprimé avec succès!`);
+            showMessage("Produit supprimé avec succès.");
             fetchProducts();
         } catch (err) {
-            console.error('Erreur lors de la suppression du produit:', err.response?.data || err);
-            setError(err.response?.data.error || 'Erreur inconnue lors de la suppression.');
+             console.error("Erreur lors de la suppression:", err.response ? err.response.data : err.message);
+             showMessage("Erreur lors de la suppression du produit.", true);
         }
     };
 
-    // --- Fonction de Déconnexion ---
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/login', { replace: true });
+    // --- AUTHENTIFICATION (LOGIN) ---
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        try {
+            const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
+            
+            const newToken = response.data.token;
+            setToken(newToken);
+            localStorage.setItem('adminToken', newToken);
+            setIsAuthenticated(true);
+            showMessage("Connexion réussie !");
+            
+        } catch (err) {
+            const errMsg = err.response && err.response.data && err.response.data.error 
+                ? err.response.data.error
+                : "Erreur de connexion (serveur injoignable)";
+            showMessage(errMsg, true);
+        }
     };
 
+    // --- DÉCONNEXION (LOGOUT) ---
+    const handleLogout = () => {
+        setToken('');
+        localStorage.removeItem('adminToken');
+        setIsAuthenticated(false);
+        setProducts([]);
+        showMessage("Déconnexion réussie.");
+    };
 
+    // =========================================================================
+    //                            RENDU DU COMPOSANT
+    // =========================================================================
+
+    if (!isAuthenticated) {
+        // --- RENDU : FORMULAIRE DE CONNEXION ---
+        return (
+            <div className="admin-container">
+                <div className="login-section">
+                    <h2>Connexion Administrateur</h2>
+                    {error && <div className="error-message">{error}</div>}
+                    <form onSubmit={handleLogin} className="login-form">
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="text"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Mot de passe</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="submit-product-button">
+                            Se Connecter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+
+
+    // --- RENDU : VUE D'ADMINISTRATION PRINCIPALE ---
     return (
         <div className="admin-container">
             <header className="admin-header">
-                <h1>Panneau d'Administration de Ma Boulangerie</h1>
+                <h1>Administration de Ma Boulangerie</h1>
                 <button onClick={handleLogout} className="logout-button">
-                    <FaSignOutAlt /> Déconnexion
+                    Déconnexion
                 </button>
             </header>
 
-            <div className="admin-content">
-                
-                {success && <p className="success-message">{success}</p>}
-                {error && <p className="error-message">{error}</p>}
+            {message && <div className="success-message">{message}</div>}
+            {error && <div className="error-message">{error}</div>}
 
-                {/* --- Section Ajout/Édition --- */}
-                <section className="form-section">
-                    {isEditing ? (
+            {/* --- SECTION FORMULAIRE D'ÉDITION --- */}
+            {isEditing && (
+                <div id="edit-form" className="edit-product-section">
+                    <h2>Modifier le Produit: {editingProduct?.name}</h2>
+                    <form onSubmit={handleSubmit} className="product-form">
+                        <div className="form-group">
+                            <label>Nom</label>
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label>Description</label>
+                            <textarea name="description" value={formData.description} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label>Prix (€)</label>
+                            <input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" required />
+                        </div>
                         
-                        // --- FORMULAIRE D'ÉDITION ---
-                        <div className="edit-product-section">
-                            <h2><FaEdit /> Modifier le Produit : {editProduct.name}</h2>
-                            <form className="product-form" onSubmit={handleSubmitEdit}>
-                                <div className="form-group">
-                                    <label>Nom du Produit</label>
-                                    <input type="text" value={editProduct.name} onChange={(e) => setEditProduct({ ...editProduct, name: e.target.value })} required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Description</label>
-                                    <textarea value={editProduct.description} onChange={(e) => setEditProduct({ ...editProduct, description: e.target.value })} required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Prix (€)</label>
-                                    <input type="number" value={editProduct.price} onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })} min="0.01" step="0.01" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Image Actuelle</label>
-                                    <img 
-                                        src={editProduct.currentImage} 
-                                        alt={`Aperçu actuel du produit`} 
-                                        className="current-image-preview"
-                                    />
-                                    <label htmlFor="edit-image">Remplacer l'Image (Facultatif)</label>
-                                    <input
-                                        id="edit-image"
-                                        type="file"
-                                        onChange={handleEditImageChange}
-                                    />
-                                </div>
-                                <div className="edit-actions">
-                                    <button type="submit" className="submit-product-button">
-                                        Sauvegarder les Modifications
-                                    </button>
-                                    <button type="button" onClick={() => setIsEditing(false)} className="cancel-button">
-                                        Annuler
-                                    </button>
-                                </div>
-                            </form>
+                        {/* Prévisualisation de l'image actuelle */}
+                        {editingProduct.image && (
+                            <>
+                                <label>Image Actuelle:</label>
+                                <img src={editingProduct.image} alt="Actuel" className="current-image-preview" />
+                            </>
+                        )}
+
+                        <div className="form-group">
+                            <label>Nouvelle Image (optionnel)</label>
+                            <input type="file" name="image" onChange={handleFileChange} accept="image/*" />
+                            {imageFile && <p className="image-selected">Fichier sélectionné : {imageFile.name}</p>}
                         </div>
+
+                        <div className="edit-actions">
+                            <button type="submit" className="submit-product-button" disabled={isSubmitting}>
+                                {isSubmitting ? 'Mise à jour en cours...' : 'Sauvegarder les modifications'}
+                            </button>
+                            <button type="button" onClick={cancelEditing} className="cancel-button">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            {/* --- SECTION FORMULAIRE D'AJOUT --- */}
+            {!isEditing && (
+                <div className="add-product-section">
+                    <h2>Ajouter un nouveau produit</h2>
+                    <form onSubmit={handleSubmit} className="product-form">
+                         <div className="form-group">
+                            <label>Nom</label>
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label>Description</label>
+                            <textarea name="description" value={formData.description} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label>Prix (€)</label>
+                            <input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" required />
+                        </div>
+                        <div className="form-group">
+                            <label>Image du produit</label>
+                            <input type="file" name="image" onChange={handleFileChange} accept="image/*" required />
+                            {imageFile && <p className="image-selected">Fichier sélectionné : {imageFile.name}</p>}
+                        </div>
+
+                        <button type="submit" className="submit-product-button" disabled={isSubmitting}>
+                            {isSubmitting ? 'Ajout en cours...' : 'Ajouter le produit'}
+                        </button>
+                    </form>
+                </div>
+            )}
+
+            <hr />
+
+            {/* --- SECTION LISTE DES PRODUITS (Affichage Corrigé) --- */}
+            <section className="product-list-section">
+                <h2>Liste des Produits</h2>
+                <div className="product-grid">
+                    {products.length === 0 ? (
+                        <p style={{textAlign: 'center', width: '100%', gridColumn: '1 / -1'}}>Aucun produit trouvé.</p>
                     ) : (
-                        // --- FORMULAIRE D'AJOUT ---
-                        <div className="add-product-section">
-                            <h2><FaPlusCircle /> Ajouter un Nouveau Produit</h2>
-                            <form className="product-form" onSubmit={handleAddProduct}>
-                                <div className="form-group">
-                                    <label htmlFor="name">Nom du Produit</label>
-                                    <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="description">Description</label>
-                                    <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="price">Prix (€)</label>
-                                    <input id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} min="0.01" step="0.01" required />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="image">Image du Produit</label>
-                                    <input id="image" type="file" onChange={handleImageChange} required />
-                                    {imageFile && <p className="image-selected">Image sélectionnée: **{imageFile.name}**</p>}
-                                </div>
-                                <button type="submit" className="submit-product-button">
-                                    Ajouter le Produit
-                                </button>
-                            </form>
-                        </div>
-                    )}
-                </section>
-
-                <hr/>
-
-                {/* --- Section Gestion des Produits (Liste détaillée) --- */}
-                <section className="product-list-section">
-                    <h2>Gestion des Produits ({products.length})</h2>
-                    <div className="product-grid">
-                        {products.map(p => (
+                        products.map((p) => (
                             <div key={p._id} className="product-card">
-                                <img
-                                    src={p.image} 
-                                    // 🔑 CORRECTION ESLINT (Ligne 232): alt non redondant
-                                    alt={`Produit ${p.name}`} 
-                                    className="commerce-image" 
-                                />
+                                
+                                {/* 🔑 STRUCTURE CLÉ pour images non tronquées (CSS: object-fit: contain) */}
+                                <div className="product-image-container">
+                                    <img 
+                                        src={p.image} 
+                                        alt={`Image de ${p.name}`} 
+                                        // className="commerce-image" (si vous utilisiez une classe)
+                                    />
+                                </div>
+                                {/* 🔑 FIN DE LA STRUCTURE CLÉ */}
+
                                 <div className="product-info">
                                     <h3>{p.name}</h3>
-                                    <p className="description">{p.description}</p>
-                                    <p className="price">{parseFloat(p.price).toFixed(2)} €</p>
+                                    {/* Utilisation de || '' pour éviter les erreurs si la description est null */}
+                                    <p className="description">{p.description || ''}</p> 
+                                    {/* toLocaleString pour un meilleur affichage monétaire */}
+                                    <p className="price">{p.price?.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</p>
                                 </div>
+                                
                                 <div className="actions">
-                                    <button onClick={() => handleEditClick(p)} className="edit-button">
-                                        <FaEdit /> Modifier
+                                    <button 
+                                        className="edit-button" 
+                                        onClick={() => startEditing(p)}
+                                    >
+                                        Éditer
                                     </button>
-                                    <button onClick={() => handleDeleteProduct(p._id)} className="delete-button">
-                                        <FaTrash /> Supprimer
+                                    <button 
+                                        className="delete-button" 
+                                        onClick={() => handleDelete(p._id)}
+                                    >
+                                        Supprimer
                                     </button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </section>&&
-                
-            </div>
+                        ))
+                    )}
+                </div>
+            </section>
         </div>
     );
 };
