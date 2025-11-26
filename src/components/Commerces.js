@@ -85,22 +85,16 @@ const Commerces = () => {
             </button>
           </div>
 
-          {/* 🔑 CORRECTION : Remplacement du bloc de commentaire par le JSX fonctionnel */}
-          <div className="right-group">
-            <button className="login-button" onClick={handleLoginRedirect}>
-              <FaUser /> Se connecter
-            </button>
-          </div>
+          {/* Le bloc right-group contenant le bouton "Se connecter" a été supprimé ici. */}
         </div> 
-        {/* 🔑 FIN DE CORRECTION. Le top-bar div est maintenant correctement fermé avant le header */}
 
         <div className="logo-container-centered">
           <img 
-                src={logo} 
-                alt="Logo e-souk" 
-                className="logo" 
-                onClick={() => navigate('/')} 
-            />
+                src={logo} 
+                alt="Logo e-souk" 
+                className="logo" 
+                onClick={() => navigate('/')} 
+            />
         </div>
 
         <h1>Tous les commerces</h1>
@@ -136,7 +130,6 @@ const Commerces = () => {
           <div key={commerce.id} className="commerce-card" onClick={() => handleClick(commerce.link)}>
             <img 
                 src={commerce.image} 
-                // 🔑 CORRECTION alt : Rendre l'attribut moins redondant
                 alt={`Le commerce ${commerce.name}`} 
                 className="commerce-image" 
             />
@@ -150,7 +143,7 @@ const Commerces = () => {
       {/* Image en bas de page */}
       <div className="footer-image-container">
         <img src={pageImage} alt="Illustration de produits artisanaux" className="footer-image" />
-      </div>
+        </div>
     </div>
   );
 };
