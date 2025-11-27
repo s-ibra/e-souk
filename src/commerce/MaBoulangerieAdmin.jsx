@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom'; // Décommentez ceci si vous voulez utiliser useNavigate
 import './MaBoulangerieAdmin.css';
 
 // URL de base de votre API Render.
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
-// NOTE: Si vous utilisez un .env, remplacez-le par process.env.REACT_APP_API_URL
 
 // État initial d'un nouveau produit
 const initialProductState = {
@@ -20,9 +18,6 @@ const initialProductState = {
 // =========================================================================
 
 const MaBoulangerieAdmin = () => {
-    // Si vous utilisez useNavigate, décommentez et initialisez ici:
-    // const navigate = useNavigate(); 
-    
     // --- États de gestion ---
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [token, setToken] = useState(localStorage.getItem('adminToken') || '');
@@ -65,18 +60,17 @@ const MaBoulangerieAdmin = () => {
         }, 5000); 
     }, [setMessage, setError]); 
 
-    // --- Headers avec le Token d'authentification ---
+    // --- Headers avec le Token d'authentification (CORRECTION : useCallBack) ---
     const getConfig = useCallback(() => ({
         headers: {
             Authorization: `Bearer ${token}`,
         },
-    }), [token]); 
+    }), [token]); // 🔑 Dépend uniquement de token
 
-    // --- GESTION DES CATÉGORIES ---
+    // --- GESTION DES CATÉGORIES (CORRECTION : Ajout de getConfig) ---
     const fetchCategories = useCallback(async () => {
         if (!token) return;
         try {
-            // Note: Utilisation de getConfig() pour s'assurer que l'admin est bien connecté
             const response = await axios.get(`${API_BASE_URL}/categories`, getConfig());
             setCategories(response.data);
             // Si le formulaire est vide, assigner la première catégorie par défaut
@@ -87,7 +81,7 @@ const MaBoulangerieAdmin = () => {
             console.error("Fetch categories error:", err);
             showMessage("Erreur lors de la récupération des catégories.", true);
         }
-    }, [token, formData, showMessage, getConfig]); 
+    }, [token, formData, showMessage, getConfig]); // 🔑 Ajout de getConfig
 
 
     // --- GESTION DES REQUÊTES API (CRUD) ---
@@ -101,7 +95,7 @@ const MaBoulangerieAdmin = () => {
             showMessage("Erreur lors de la récupération des produits. (Token invalide ?)", true);
             console.error("Fetch products error:", err);
         }
-    }, [token, showMessage, getConfig]); 
+    }, [token, showMessage, getConfig]); // 🔑 Ajout de getConfig
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -217,13 +211,12 @@ const MaBoulangerieAdmin = () => {
         }
     };
 
-    // 🔑 PUBLICATION/DÉPUBLICATION BASIQUE (PUT)
+    // 🔑 PUBLICATION/DÉPUBLICATION (PUT)
     const handleTogglePublish = async (product) => {
         const action = product.isPublished ? 'dépublier' : 'publier';
         if (!window.confirm(`Êtes-vous sûr de vouloir ${action} ce produit ?`)) return;
 
         try {
-            // Note: On utilise le endpoint PUT standard pour basculer le statut sans redirection
             const response = await axios.put(
                 `${API_BASE_URL}/products/${product._id}`, 
                 { 
@@ -245,40 +238,7 @@ const MaBoulangerieAdmin = () => {
             showMessage(`Erreur lors de la ${action} du produit. (Vérifiez le Token)`, true);
         }
     };
-    
-    // ----------------------------------------------------------------------
-    // --- NOUVELLE FONCTION : VALIDATION DÉFINITIVE AVEC REDIRECTION ---
-    // ----------------------------------------------------------------------
-    const handleFinalValidate = async (productId) => {
-        if (!window.confirm("Êtes-vous sûr de vouloir valider DÉFINITIVEMENT et PUBLIER ce produit ?")) return;
-
-        try {
-            // Utilise l'endpoint spécifique /validate qui force isPublished: true
-            await axios.put(
-                `${API_BASE_URL}/products/${productId}/validate`, 
-                {}, // Pas de corps de requête nécessaire
-                getConfig()
-            );
-            
-            showMessage("Produit validé et publié avec succès ! Redirection...", false);
-            
-            // --- REDIRECTION VERS LA PAGE PUBLIC ---
-            setTimeout(() => {
-                // Si vous utilisez React Router, remplacez par: navigate('/BoulangeriePublique');
-                window.location.href = '/BoulangeriePublique'; 
-            }, 1500); // Laisse le temps d'afficher le message de succès
-
-        } catch (err) {
-            console.error("Erreur lors de la validation finale:", err.response ? err.response.data : err.message);
-            const errMsg = err.response && err.response.data && err.response.data.error 
-                ? `Erreur de validation: ${err.response.data.error}`
-                : "Erreur lors de la validation finale. Vérifiez le Token/Serveur.";
-            showMessage(errMsg, true);
-        }
-    };
-    // ----------------------------------------------------------------------
-
-
+    
     // --- AUTHENTIFICATION (LOGIN) ---
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -409,23 +369,10 @@ const MaBoulangerieAdmin = () => {
                             {imageFile && <p className="image-selected">Fichier sélectionné : **{imageFile.name}**</p>}
                         </div>
 
-                        {/* --- NOUVELLES ACTIONS D'ÉDITION INCLUANT LE BOUTON DE VALIDATION --- */}
                         <div className="edit-actions">
                             <button type="submit" className="submit-product-button" disabled={isSubmitting}>
                                 {isSubmitting ? 'Mise à jour en cours...' : 'Sauvegarder les modifications'}
                             </button>
-                            
-                            {/* BOUTON DE VALIDATION DÉFINITIVE AJOUTÉ ICI */}
-                            <button 
-                                type="button" 
-                                onClick={() => handleFinalValidate(editingProduct._id)} 
-                                className="submit-product-button validate-button" 
-                                disabled={isSubmitting || editingProduct?.isPublished}
-                                style={{ marginLeft: '10px', backgroundColor: editingProduct?.isPublished ? '#6c757d' : '#28a745' }}
-                            >
-                                {editingProduct?.isPublished ? 'Article Déjà Publié' : '✅ Valider et Publier l’Article'}
-                            </button>
-
                             <button type="button" onClick={cancelEditing} className="cancel-button" disabled={isSubmitting}>
                                 Annuler
                             </button>
@@ -481,13 +428,12 @@ const MaBoulangerieAdmin = () => {
             
             <div className="category-management-section">
                 <h2>📁 Gestion des Catégories</h2>
-                {/* NOTE: Vous voudrez probablement ajouter le formulaire de création/édition de catégorie ici */}
                 {categories.length === 0 ? (
                     <p className="error-message">Veuillez créer des catégories avant d'ajouter des produits.</p>
                 ) : (
                     <ul className="category-list">
                         {categories.map(cat => (
-                            <li key={cat._id}>{cat.name}</li>
+                            <li key={cat._id}>{cat.name} ({cat.slug})</li>
                         ))}
                     </ul>
                 )}
