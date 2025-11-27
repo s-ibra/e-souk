@@ -279,7 +279,7 @@ const MaBoulangerieAdmin = () => {
         return (
             <div className="admin-container">
                 <div className="login-section">
-                    <h2>🥐 Connexion Administrateur</h2>
+                    <h2>Connexion Administrateur</h2>
                     {error && <div className="error-message">{error}</div>}
                     <form onSubmit={handleLogin} className="login-form">
                         <div className="form-group">
