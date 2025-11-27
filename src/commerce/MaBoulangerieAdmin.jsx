@@ -5,12 +5,11 @@ import './MaBoulangerieAdmin.css';
 // URL de base de votre API Render.
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
 
-// État initial d'un nouveau produit
+// État initial d'un nouveau produit (simplifié)
 const initialProductState = {
     name: '',
     description: '',
     price: '', 
-    category: '', 
 };
 
 // =========================================================================
@@ -24,14 +23,16 @@ const MaBoulangerieAdmin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     
-    // --- États des produits et catégories ---
+    // --- États des produits ---
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]); 
+    // Suppression de l'état 'categories'
     const [formData, setFormData] = useState(initialProductState);
     const [imageFile, setImageFile] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Suppression des états de gestion de catégorie (newCategoryName, isCategorySubmitting)
 
     // --- États des messages ---
     const [message, setMessage] = useState('');
@@ -60,28 +61,14 @@ const MaBoulangerieAdmin = () => {
         }, 5000); 
     }, [setMessage, setError]); 
 
-    // --- Headers avec le Token d'authentification (CORRECTION : useCallBack) ---
+    // --- Headers avec le Token d'authentification ---
     const getConfig = useCallback(() => ({
         headers: {
             Authorization: `Bearer ${token}`,
         },
-    }), [token]); // 🔑 Dépend uniquement de token
+    }), [token]); 
 
-    // --- GESTION DES CATÉGORIES (CORRECTION : Ajout de getConfig) ---
-    const fetchCategories = useCallback(async () => {
-        if (!token) return;
-        try {
-            const response = await axios.get(`${API_BASE_URL}/categories`, getConfig());
-            setCategories(response.data);
-            // Si le formulaire est vide, assigner la première catégorie par défaut
-            if (response.data.length > 0 && !formData.category) {
-                setFormData(prev => ({ ...prev, category: response.data[0]._id }));
-            }
-        } catch (err) {
-            console.error("Fetch categories error:", err);
-            showMessage("Erreur lors de la récupération des catégories.", true);
-        }
-    }, [token, formData, showMessage, getConfig]); // 🔑 Ajout de getConfig
+    // --- Suppression de la fonction fetchCategories ---
 
 
     // --- GESTION DES REQUÊTES API (CRUD) ---
@@ -89,20 +76,21 @@ const MaBoulangerieAdmin = () => {
     // Récupérer la liste des produits pour l'ADMIN 
     const fetchProducts = useCallback(async () => {
         try {
+            // On utilise l'endpoint par défaut qui ne retourne plus de catégories
             const response = await axios.get(`${API_BASE_URL}/products`, getConfig()); 
             setProducts(response.data);
         } catch (err) {
             showMessage("Erreur lors de la récupération des produits. (Token invalide ?)", true);
             console.error("Fetch products error:", err);
         }
-    }, [token, showMessage, getConfig]); // 🔑 Ajout de getConfig
+    }, [token, showMessage, getConfig]); 
 
     useEffect(() => {
         if (isAuthenticated) {
             fetchProducts();
-            fetchCategories(); 
+            // Suppression de l'appel à fetchCategories()
         }
-    }, [isAuthenticated, fetchProducts, fetchCategories]);
+    }, [isAuthenticated, fetchProducts]); // Dépendances ajustées
 
 
     // Gestion du changement de champs
@@ -115,6 +103,9 @@ const MaBoulangerieAdmin = () => {
         setImageFile(e.target.files[0]);
     };
 
+    // Suppression des fonctions de gestion de catégorie (handleCategorySubmit, handleCategoryDelete)
+
+
     // --- AJOUT ET MODIFICATION DE PRODUIT (POST/PUT) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -125,10 +116,7 @@ const MaBoulangerieAdmin = () => {
             showMessage("Veuillez entrer un prix valide (nombre positif).", true);
             return;
         }
-        if (!formData.category) {
-            showMessage("Veuillez sélectionner une catégorie.", true);
-            return;
-        }
+        // Suppression de la validation de catégorie
 
         setIsSubmitting(true);
         setError('');
@@ -137,7 +125,7 @@ const MaBoulangerieAdmin = () => {
         data.append('name', formData.name);
         data.append('description', formData.description);
         data.append('price', parsedPrice); 
-        data.append('category', formData.category); 
+        // Suppression de data.append('category', ...)
         
         if (imageFile) {
             data.append('image', imageFile);
@@ -167,7 +155,7 @@ const MaBoulangerieAdmin = () => {
             console.error("Erreur lors de l'ajout/modification:", err.response ? err.response.data : err.message);
             const errMsg = err.response && err.response.data && err.response.data.error 
                 ? `Erreur: ${err.response.data.error}`
-                : "Erreur inconnue lors de l'opération. (Vérifiez le prix, la catégorie ou le Token)";
+                : "Erreur inconnue lors de l'opération. (Vérifiez le prix ou le Token)";
 
             showMessage(errMsg, true);
         } finally {
@@ -183,7 +171,7 @@ const MaBoulangerieAdmin = () => {
             name: product.name,
             description: product.description,
             price: product.price.toString(), 
-            category: product.category?._id || '', 
+            // Suppression du champ category
         });
         setImageFile(null); 
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
@@ -223,7 +211,7 @@ const MaBoulangerieAdmin = () => {
                     name: product.name, 
                     description: product.description,
                     price: product.price,
-                    category: product.category?._id, 
+                    // Suppression du champ category dans le payload
                     isPublished: !product.isPublished // Basculer l'état
                 }, 
                 getConfig()
@@ -339,17 +327,7 @@ const MaBoulangerieAdmin = () => {
                             <textarea name="description" value={formData.description} onChange={handleChange} required />
                         </div>
 
-                        <div className="form-group">
-                            <label>Catégorie</label>
-                            <select name="category" value={formData.category} onChange={handleChange} required>
-                                <option value="" disabled>Sélectionner une catégorie</option>
-                                {categories.map((cat) => (
-                                    <option key={cat._id} value={cat._id}>
-                                        {cat.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        {/* Suppression du champ de sélection de catégorie */}
 
                         <div className="form-group">
                             <label>Prix (€)</label>
@@ -395,18 +373,8 @@ const MaBoulangerieAdmin = () => {
                             <textarea name="description" value={formData.description} onChange={handleChange} required />
                         </div>
 
-                        <div className="form-group">
-                            <label>Catégorie</label>
-                            <select name="category" value={formData.category} onChange={handleChange} required>
-                                <option value="" disabled>Sélectionner une catégorie</option>
-                                {categories.map((cat) => (
-                                    <option key={cat._id} value={cat._id}>
-                                        {cat.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
+                        {/* Suppression du champ de sélection de catégorie */}
+  
                         <div className="form-group">
                             <label>Prix (€)</label>
                             <input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" required />
@@ -426,23 +394,12 @@ const MaBoulangerieAdmin = () => {
 
             <hr className="divider" />
             
-            <div className="category-management-section">
-                <h2>📁 Gestion des Catégories</h2>
-                {categories.length === 0 ? (
-                    <p className="error-message">Veuillez créer des catégories avant d'ajouter des produits.</p>
-                ) : (
-                    <ul className="category-list">
-                        {categories.map(cat => (
-                            <li key={cat._id}>{cat.name} ({cat.slug})</li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-
+            {/* Suppression de la SECTION GESTION DES CATÉGORIES */}
+  
             <hr className="divider" />
 
 
-            {/* --- TABLEAU DES PRODUITS --- */}
+            {/* --- TABLEAU DES PRODUITS (Colonne Catégorie retirée) --- */}
             <div className="product-list-section">
                 <h2>Liste des produits ({products.length})</h2>
                 <table className="product-table">
@@ -450,7 +407,6 @@ const MaBoulangerieAdmin = () => {
                         <tr>
                             <th>Image</th>
                             <th>Nom</th>
-                            <th>Catégorie</th> 
                             <th>Prix (€)</th>
                             <th>Statut</th>
                             <th>Actions</th>
@@ -463,7 +419,6 @@ const MaBoulangerieAdmin = () => {
                                     <img src={product.image} alt={product.name} className="product-table-image" />
                                 </td>
                                 <td>{product.name}</td>
-                                <td>{product.category?.name || 'Non assignée'}</td> 
                                 <td>{product.price.toFixed(2)} €</td>
                                 <td>
                                     <span className={`status-badge ${product.isPublished ? 'published' : 'unpublished'}`}>
