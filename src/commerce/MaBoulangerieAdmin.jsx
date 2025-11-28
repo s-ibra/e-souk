@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './MaBoulangerieAdmin.css';
-import { FaSignOutAlt, FaPlus, FaTags } from 'react-icons/fa'; // Ajout d'icônes
+import { FaSignOutAlt, FaPlus } from 'react-icons/fa'; 
+// FaTags a été supprimé car la gestion de catégorie est retirée
 
 // URL de base de votre API Render.
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
@@ -18,15 +19,14 @@ const initialProductState = {
 //              MAIN COMPONENT: MA BOULANGERIE ADMIN
 // =========================================================================
 
-// Le composant reçoit handleLogout du parent (App.js via RequireAuth)
 const MaBoulangerieAdmin = ({ handleLogout }) => {
     
-    // Le token est lu directement depuis localStorage, car le composant 
-    // n'est affiché que si RequireAuth a trouvé un token valide.
+    // Le token est lu directement depuis localStorage
     const token = localStorage.getItem('authToken'); 
     
     // --- États des produits et catégories ---
     const [products, setProducts] = useState([]);
+    // Les catégories sont toujours nécessaires pour la sélection dans le formulaire produit
     const [categories, setCategories] = useState([]); 
     const [formData, setFormData] = useState(initialProductState);
     const [imageFile, setImageFile] = useState(null);
@@ -34,17 +34,10 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
     const [editingProduct, setEditingProduct] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // États de gestion de catégorie
-    const [newCategoryName, setNewCategoryName] = useState(''); 
-    const [isCategorySubmitting, setIsCategorySubmitting] = useState(false); 
-
     // --- États des messages ---
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
-
-    // 🛑 LOGIQUE DE CONNEXION SUPPRIMÉE : Le parent (RequireAuth) gère l'accès.
-    // 🛑 États email et password SUPPRIMÉS.
 
     // --- Fonctions de gestion des messages ---
     const showMessage = useCallback((msg, isError = false) => {
@@ -61,7 +54,7 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
         }, 5000); 
     }, []); 
 
-    // --- Headers avec le Token d'authentification (doit être dynamique) ---
+    // --- Headers avec le Token d'authentification ---
     const getConfig = useCallback(() => {
         const currentToken = localStorage.getItem('authToken');
         return {
@@ -72,15 +65,16 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
     }, []); 
 
     // --- Récupération des Catégories ---
+    // CETTE FONCTION EST CONSERVÉE car le formulaire produit en a besoin.
     const fetchCategories = useCallback(async () => {
-        // Sécurité : si le token est manquant (devrait pas arriver grâce à RequireAuth)
         if (!token) return; 
 
         try {
+            // NOTE: On utilise l'endpoint /categories existant
             const response = await axios.get(`${API_BASE_URL}/categories`, getConfig());
             setCategories(response.data);
         } catch (err) {
-            showMessage("Erreur lors de la récupération des catégories.", true);
+            showMessage("Erreur lors de la récupération des catégories pour le formulaire.", true);
             console.error("Fetch categories error:", err);
         }
     }, [showMessage, getConfig, token]); 
@@ -94,7 +88,6 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
             const response = await axios.get(`${API_BASE_URL}/products`, getConfig()); 
             setProducts(response.data);
         } catch (err) {
-             // Si le token est invalide, déconnecte l'utilisateur
             if (err.response && err.response.status === 401) {
                 showMessage("Session expirée. Veuillez vous reconnecter.", true);
                 handleLogout();
@@ -108,9 +101,8 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
 
     // --- Hook d'initialisation et de rafraîchissement ---
     useEffect(() => {
-        // Les appels se font dès que le composant est monté (grâce à RequireAuth)
         fetchProducts();
-        fetchCategories(); 
+        fetchCategories(); // Gardé pour le champ de sélection
     }, [fetchProducts, fetchCategories]); 
 
 
@@ -126,42 +118,9 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
         setImageFile(e.target.files[0]);
     };
 
-    // --- Gestion de Catégorie (POST/DELETE) ---
-    const handleCategorySubmit = async (e) => {
-        e.preventDefault();
-        if (isCategorySubmitting || !newCategoryName.trim()) return;
-
-        setIsCategorySubmitting(true);
-        setError('');
-
-        try {
-            await axios.post(`${API_BASE_URL}/categories`, { name: newCategoryName.trim() }, getConfig());
-            showMessage("Catégorie ajoutée avec succès !");
-            setNewCategoryName('');
-            fetchCategories();
-        } catch (err) {
-            console.error("Erreur lors de l'ajout de catégorie:", err.response ? err.response.data : err.message);
-            showMessage("Erreur lors de l'ajout de catégorie.", true);
-        } finally {
-            setIsCategorySubmitting(false);
-        }
-    };
-
-    const handleCategoryDelete = async (categoryId) => {
-        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible. Tous les produits liés devront être mis à jour manuellement.")) return;
-
-        try {
-            await axios.delete(`${API_BASE_URL}/categories/${categoryId}`, getConfig());
-            showMessage("Catégorie supprimée avec succès.");
-            fetchCategories();
-            fetchProducts(); // Rafraîchir les produits au cas où leur catégorie soit maintenant "Non classé"
-        } catch (err) {
-            console.error("Erreur lors de la suppression de catégorie:", err.response ? err.response.data : err.message);
-            showMessage("Erreur lors de la suppression de catégorie. (Vérifiez qu'aucun produit n'y est lié)", true);
-        }
-    };
+    // 🛑 Logique de gestion de catégorie (handleCategorySubmit, handleCategoryDelete) SUPPRIMÉE.
     
-
+    
     // --- AJOUT ET MODIFICATION DE PRODUIT (POST/PUT) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -196,7 +155,6 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
 
         try {
             if (isEditing) {
-                // Pour la modification, ajoute l'ID du produit
                 await axios.put(`${API_BASE_URL}/products/${editingProduct._id}`, data, getConfig());
                 showMessage("Produit modifié avec succès !");
                 setIsEditing(false);
@@ -264,14 +222,11 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
         if (!window.confirm(`Êtes-vous sûr de vouloir ${action} ce produit ?`)) return;
 
         try {
-            // Pour l'action de publication, on envoie uniquement les données nécessaires
+            // Pour des raisons de robustesse, on renvoie les champs obligatoires en plus de l'état de publication
             await axios.put(
                 `${API_BASE_URL}/products/${product._id}`, 
                 { 
                     isPublished: !product.isPublished,
-                    // Note: Il est plus sûr de n'envoyer que l'état 'isPublished', 
-                    // mais si votre route PUT requiert tous les champs, vous devrez les inclure.
-                    // Exemple avec tous les champs (comme dans votre original, c'est plus robuste) :
                     name: product.name, 
                     description: product.description,
                     price: product.price,
@@ -290,19 +245,15 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
         }
     };
     
-    // 🛑 LOGIQUE handleLogout SIMPLIFIÉE : utilise la prop reçue du parent
-    // 🛑 Le Rendu du formulaire de connexion est SUPPRIMÉ.
-
-
+    
     // =========================================================================
-    //                            RENDU DU COMPOSANT
+    //              RENDU DU COMPOSANT
     // =========================================================================
 
     return (
         <div className="admin-container">
             <header className="admin-header">
                 <h1> Administration de Ma Boulangerie</h1>
-                {/* Utilisation de la prop handleLogout fournie par App.js */}
                 <button onClick={handleLogout} className="logout-button">
                     <FaSignOutAlt /> Déconnexion
                 </button>
@@ -325,7 +276,7 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
                             <textarea name="description" value={formData.description} onChange={handleChange} required />
                         </div>
 
-                        {/* Champ de sélection de catégorie */}
+                        {/* Champ de sélection de catégorie (CONSERVÉ) */}
                         <div className="form-group">
                             <label>Catégorie</label>
                             <select name="category" value={formData.category} onChange={handleChange} required>
@@ -383,7 +334,7 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
                             <textarea name="description" value={formData.description} onChange={handleChange} required />
                         </div>
 
-                        {/* Champ de sélection de catégorie */}
+                        {/* Champ de sélection de catégorie (CONSERVÉ) */}
                         <div className="form-group">
                             <label>Catégorie</label>
                             <select name="category" value={formData.category} onChange={handleChange} required>
@@ -415,40 +366,9 @@ const MaBoulangerieAdmin = ({ handleLogout }) => {
 
             <hr className="divider" />
             
-            {/* SECTION GESTION DES CATÉGORIES */}
-            <div className="category-management-section">
-                <h2><FaTags /> Gestion des Catégories</h2>
-                <form onSubmit={handleCategorySubmit} className="category-form">
-                    <div className="form-group">
-                        <label>Nom de la nouvelle catégorie</label>
-                        <input 
-                            type="text" 
-                            value={newCategoryName} 
-                            onChange={(e) => setNewCategoryName(e.target.value)} 
-                            required 
-                            disabled={isCategorySubmitting}
-                        />
-                    </div>
-                    <button type="submit" className="submit-product-button" disabled={isCategorySubmitting}>
-                        {isCategorySubmitting ? 'Ajout en cours...' : 'Ajouter Catégorie'}
-                    </button>
-                </form>
-
-                <div className="category-list">
-                    <h3>Catégories existantes ({categories.length})</h3>
-                    <ul>
-                        {categories.map((cat) => (
-                            <li key={cat._id}>
-                                {cat.name} 
-                                <button onClick={() => handleCategoryDelete(cat._id)} className="delete-category-button">
-                                    Supprimer
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
- 
+            {/* 🛑 SECTION GESTION DES CATÉGORIES SUPPRIMÉE ENTIÈREMENT */}
+            {/* Supprimé : div.category-management-section */}
+            
             <hr className="divider" />
 
 
