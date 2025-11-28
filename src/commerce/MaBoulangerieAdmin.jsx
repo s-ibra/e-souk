@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './MaBoulangerieAdmin.css';
 
-// 🎯 L'URL DOIT POINTER VERS LA BASE DE VOTRE API DÉPLOYÉE
+// URL de base de votre API Render.
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
 
-// État initial d'un nouveau produit
+// État initial d'un nouveau produit (simplifié)
 const initialProductState = {
     name: '',
     description: '',
@@ -25,11 +25,14 @@ const MaBoulangerieAdmin = () => {
     
     // --- États des produits ---
     const [products, setProducts] = useState([]);
+    // Suppression de l'état 'categories'
     const [formData, setFormData] = useState(initialProductState);
     const [imageFile, setImageFile] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Suppression des états de gestion de catégorie (newCategoryName, isCategorySubmitting)
 
     // --- États des messages ---
     const [message, setMessage] = useState('');
@@ -65,21 +68,19 @@ const MaBoulangerieAdmin = () => {
         },
     }), [token]); 
 
+    // --- Suppression de la fonction fetchCategories ---
+
+
     // --- GESTION DES REQUÊTES API (CRUD) ---
 
     // Récupérer la liste des produits pour l'ADMIN 
     const fetchProducts = useCallback(async () => {
         try {
+            // On utilise l'endpoint par défaut qui ne retourne plus de catégories
             const response = await axios.get(`${API_BASE_URL}/products`, getConfig()); 
             setProducts(response.data);
         } catch (err) {
-            // Gérer le cas où le token est périmé ou invalide
-            if (err.response && err.response.status === 403) {
-                handleLogout(); // Déconnecter l'utilisateur automatiquement
-                showMessage("Session expirée. Veuillez vous reconnecter.", true);
-            } else {
-                showMessage("Erreur lors de la récupération des produits. (Token invalide ?)", true);
-            }
+            showMessage("Erreur lors de la récupération des produits. (Token invalide ?)", true);
             console.error("Fetch products error:", err);
         }
     }, [token, showMessage, getConfig]); 
@@ -87,8 +88,10 @@ const MaBoulangerieAdmin = () => {
     useEffect(() => {
         if (isAuthenticated) {
             fetchProducts();
+            // Suppression de l'appel à fetchCategories()
         }
-    }, [isAuthenticated, fetchProducts]); 
+    }, [isAuthenticated, fetchProducts]); // Dépendances ajustées
+
 
     // Gestion du changement de champs
     const handleChange = (e) => {
@@ -100,6 +103,9 @@ const MaBoulangerieAdmin = () => {
         setImageFile(e.target.files[0]);
     };
 
+    // Suppression des fonctions de gestion de catégorie (handleCategorySubmit, handleCategoryDelete)
+
+
     // --- AJOUT ET MODIFICATION DE PRODUIT (POST/PUT) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,6 +116,7 @@ const MaBoulangerieAdmin = () => {
             showMessage("Veuillez entrer un prix valide (nombre positif).", true);
             return;
         }
+        // Suppression de la validation de catégorie
 
         setIsSubmitting(true);
         setError('');
@@ -118,6 +125,7 @@ const MaBoulangerieAdmin = () => {
         data.append('name', formData.name);
         data.append('description', formData.description);
         data.append('price', parsedPrice); 
+        // Suppression de data.append('category', ...)
         
         if (imageFile) {
             data.append('image', imageFile);
@@ -163,6 +171,7 @@ const MaBoulangerieAdmin = () => {
             name: product.name,
             description: product.description,
             price: product.price.toString(), 
+            // Suppression du champ category
         });
         setImageFile(null); 
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
@@ -202,6 +211,7 @@ const MaBoulangerieAdmin = () => {
                     name: product.name, 
                     description: product.description,
                     price: product.price,
+                    // Suppression du champ category dans le payload
                     isPublished: !product.isPublished // Basculer l'état
                 }, 
                 getConfig()
@@ -223,7 +233,6 @@ const MaBoulangerieAdmin = () => {
         setError('');
 
         try {
-            // 🎯 POINT CRUCIAL : L'URL de login doit être BASE_URL/login
             const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
             
             const newToken = response.data.token;
@@ -233,10 +242,9 @@ const MaBoulangerieAdmin = () => {
             showMessage("Connexion réussie !");
             
         } catch (err) {
-            console.log(err.response);
             const errMsg = err.response && err.response.data && err.response.data.error 
                 ? err.response.data.error
-                : "Erreur de connexion (Email ou mot de passe incorrect / Serveur non disponible)";
+                : "Erreur de connexion (Email ou mot de passe incorrect/Serveur injoignable)";
             showMessage(errMsg, true);
         }
     };
@@ -319,6 +327,8 @@ const MaBoulangerieAdmin = () => {
                             <textarea name="description" value={formData.description} onChange={handleChange} required />
                         </div>
 
+                        {/* Suppression du champ de sélection de catégorie */}
+
                         <div className="form-group">
                             <label>Prix (€)</label>
                             <input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" required /> 
@@ -362,6 +372,8 @@ const MaBoulangerieAdmin = () => {
                             <label>Description</label>
                             <textarea name="description" value={formData.description} onChange={handleChange} required />
                         </div>
+
+                        {/* Suppression du champ de sélection de catégorie */}
   
                         <div className="form-group">
                             <label>Prix (€)</label>
@@ -382,8 +394,12 @@ const MaBoulangerieAdmin = () => {
 
             <hr className="divider" />
             
+            {/* Suppression de la SECTION GESTION DES CATÉGORIES */}
+  
+            <hr className="divider" />
 
-            {/* --- TABLEAU DES PRODUITS --- */}
+
+            {/* --- TABLEAU DES PRODUITS (Colonne Catégorie retirée) --- */}
             <div className="product-list-section">
                 <h2>Liste des produits ({products.length})</h2>
                 <table className="product-table">
