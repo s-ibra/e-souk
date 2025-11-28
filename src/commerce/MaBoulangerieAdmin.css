@@ -1,24 +1,13 @@
-/* src/commerce/MaBoulangerieAdmin.css */
+/* ------------------------------------------------------------------ */
+/* 1. LAYOUT GÉNÉRAL ET HEADERS */
+/* ------------------------------------------------------------------ */
 
-/* --- Variables de Thème "Boulangerie Artisanale" --- */
-:root {
-    --color-primary: #946f52; /* Marron chaud/Croûte */
-    --color-secondary: #7a5a40; /* Ombre de la croûte (hover) */
-    --color-background: #f5f5f5; /* Arrière-plan clair/Farine */
-    --color-text: #333;
-    --color-error: #e74c3c;
-    --color-success: #2ecc71;
-}
-
-/* --- Mise en page Générale --- */
 .admin-container {
+    padding: 30px;
     max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    margin: 0 auto;
     font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
 }
 
 .admin-header {
@@ -26,54 +15,89 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--color-background);
+    margin-bottom: 30px;
+    border-bottom: 3px solid #dee2e6;
 }
 
 .admin-header h1 {
-    color: var(--color-primary);
+    color: #343a40;
+    font-size: 2.2em;
 }
 
 .logout-button {
-    background-color: var(--color-error);
+    background-color: #dc3545; /* Rouge pour la déconnexion */
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
     transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .logout-button:hover {
-    background-color: #c0392b;
+    background-color: #c82333;
 }
 
-/* --- Messages --- */
+.divider {
+    border: 0;
+    height: 1px;
+    background: #e9ecef;
+    margin: 40px 0;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* 2. MESSAGES D'ALERTE ET SUCCÈS */
+/* ------------------------------------------------------------------ */
+
 .success-message {
-    padding: 10px;
     background-color: #d4edda;
-    color: var(--color-success);
+    color: #155724;
     border: 1px solid #c3e6cb;
+    padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .error-message {
-    padding: 10px;
     background-color: #f8d7da;
-    color: var(--color-error);
+    color: #721c24;
     border: 1px solid #f5c6cb;
+    padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
-/* --- Formulaires (Ajout/Édition) --- */
-.add-product-section, .edit-product-section {
-    padding: 20px;
-    border: 1px solid var(--color-background);
+
+/* ------------------------------------------------------------------ */
+/* 3. FORMULAIRES (AJOUT ET ÉDITION) */
+/* ------------------------------------------------------------------ */
+
+.add-product-section, 
+.edit-product-section {
+    background: white;
+    padding: 30px;
     border-radius: 8px;
-    margin-bottom: 30px;
-    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 40px;
+}
+
+.add-product-section h2, 
+.edit-product-section h2 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .product-form .form-group {
@@ -84,221 +108,336 @@
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: var(--color-secondary);
+    color: #495057;
 }
 
 .product-form input[type="text"],
 .product-form input[type="number"],
-.product-form input[type="file"],
-.product-form select,
-.product-form textarea {
+.product-form textarea,
+.product-form select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ced4da;
     border-radius: 4px;
-    box-sizing: border-box; /* Assure que le padding n'augmente pas la largeur totale */
+    box-sizing: border-box;
+    font-size: 1em;
 }
 
 .product-form textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 80px;
 }
 
-.submit-product-button {
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 16px;
-    margin-top: 10px;
+.image-preview-group {
+    text-align: center;
+    padding: 10px 0;
 }
 
-.submit-product-button:hover:not(:disabled) {
-    background-color: var(--color-secondary);
-}
-
-.submit-product-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.edit-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.cancel-button {
-    background-color: #f39c12;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 16px;
-}
-
-.cancel-button:hover {
-    background-color: #d35400;
-}
-
-/* --- Prévisualisation Image --- */
 .current-image-preview {
-    max-width: 100px;
+    max-width: 150px;
     height: auto;
     border-radius: 4px;
     margin-top: 10px;
     border: 1px solid #ccc;
 }
-.image-selected {
-    font-size: 0.9em;
-    color: var(--color-secondary);
-    margin-top: 5px;
+
+.submit-product-button {
+    background-color: #28a745; /* Vert pour l'action CRUD principale */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-top: 10px;
 }
 
-/* --- Tableau des produits --- */
+.submit-product-button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.submit-product-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cancel-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* 4. GESTION DES CATÉGORIES */
+/* ------------------------------------------------------------------ */
+
+.category-management-section {
+    background: #e9f5ff; /* Fond bleu clair pour la section Catégories */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 40px;
+}
+
+.category-management-section h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.category-form .form-group {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.category-form input {
+    height: 44px; /* Alignement avec le bouton */
+}
+
+.category-list h3 {
+    color: #495057;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+.category-list ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.category-list li {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    color: #343a40;
+}
+
+.delete-category-button {
+    background-color: #ffc107; /* Jaune */
+    color: #343a40;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.delete-category-button:hover {
+    background-color: #e0a800;
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. TABLEAU DES PRODUITS */
+/* ------------------------------------------------------------------ */
+
 .product-list-section {
-    margin-top: 40px;
+    padding-top: 20px;
+}
+
+.product-list-section h2 {
+    color: #343a40;
+    margin-bottom: 20px;
+    font-size: 1.8em;
 }
 
 .product-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Important pour les bords arrondis */
 }
 
 .product-table th, .product-table td {
-    border: 1px solid #ddd;
+    border: 1px solid #dee2e6;
     padding: 12px;
     text-align: left;
+    vertical-align: middle;
 }
 
 .product-table th {
-    background-color: var(--color-primary);
+    background-color: #343a40;
     color: white;
+    font-weight: bold;
+    font-size: 1em;
 }
 
-.product-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+.product-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
-.product-table tr:hover {
-    background-color: #f1f1f1;
+.product-table tbody tr:hover {
+    background-color: #e9ecef;
 }
 
 .product-table-image {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     object-fit: cover;
     border-radius: 4px;
 }
 
-.product-actions-cell button {
-    margin-right: 10px;
+/* Badges de Statut */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.published {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.unpublished {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* Cellule Actions */
+.product-actions-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.action-button {
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
     font-size: 0.9em;
+    transition: background-color 0.3s;
+    white-space: nowrap;
 }
 
 .edit-button {
-    background-color: #3498db;
-    color: white;
+    background-color: #ffc107; /* Jaune */
+    color: #343a40;
 }
 
 .edit-button:hover {
-    background-color: #2980b9;
+    background-color: #e0a800;
 }
 
 .delete-button {
-    background-color: var(--color-error);
+    background-color: #dc3545; /* Rouge */
     color: white;
 }
 
 .delete-button:hover {
-    background-color: #c0392b;
+    background-color: #c82333;
 }
 
 .publish-button {
-    background-color: var(--color-success);
+    background-color: #007bff; /* Bleu (pour Publier) */
     color: white;
 }
 
 .publish-button:hover {
-    background-color: #27ae60;
+    background-color: #0056b3;
 }
 
 .unpublish-button {
-    background-color: #f39c12;
+    background-color: #6c757d; /* Gris (pour Dépublier) */
     color: white;
 }
 
 .unpublish-button:hover {
-    background-color: #d35400;
+    background-color: #5a6268;
 }
 
-/* --- Badges de Statut --- */
-.status-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 0.8em;
+/* ------------------------------------------------------------------ */
+/* 6. RESPONSIVE DESIGN */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+    .product-table th, .product-table td {
+        padding: 8px;
+    }
+    
+    .product-table {
+        font-size: 0.9em;
+    }
+
+    .product-actions-cell {
+        flex-direction: column;
+        gap: 5px;
+    }
 }
 
-.published {
-    background-color: var(--color-success);
-    color: white;
-}
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 15px;
+    }
 
-.unpublished {
-    background-color: #f39c12;
-    color: white;
-}
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .category-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-/* --- Séparateur --- */
-.divider {
-    margin: 40px 0;
-    border: 0;
-    border-top: 1px solid #ddd;
-}
-
-/* --- Login Section --- */
-.login-section {
-    max-width: 400px;
-    margin: 100px auto;
-    padding: 30px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-
-.login-form {
-    margin-top: 20px;
-}
-
-/* --- Gestion des catégories (Ajouté pour le nouveau bloc) --- */
-.category-management-section {
-    padding: 20px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    margin-bottom: 30px;
-    background-color: #fafafa;
-}
-
-.category-list {
-    list-style: disc;
-    margin-left: 20px;
-    padding: 10px 0;
-}
-
-.category-list li {
-    padding: 5px 0;
-    color: var(--color-text);
+    .category-form input {
+        height: auto;
+    }
+    
+    .category-list ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .product-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 }

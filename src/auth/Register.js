@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaSignInAlt, FaLock, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
-import './Login.css';
+import { FaUserPlus, FaLock, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
+import './Register.css'; // Importe les styles
 
 // URL de base de votre API Render (ou locale si vous testez en local)
 const API_BASE_URL = 'https://e-souk-backend.onrender.com/api'; 
 
-const Login = ({ setIsLoggedIn }) => {
+const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
 
     const handleGoBack = () => {
@@ -20,32 +22,36 @@ const Login = ({ setIsLoggedIn }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccessMessage('');
+
+        if (password !== confirmPassword) {
+            setError('Les mots de passe ne correspondent pas.');
+            return;
+        }
+
+        if (password.length < 6) {
+            setError('Le mot de passe doit contenir au moins 6 caractères.');
+            return;
+        }
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/login`, {
+            // Appel à la route /api/register du backend
+            const response = await axios.post(`${API_BASE_URL}/register`, {
                 email,
                 password,
             });
 
-            const { token, message } = response.data;
+            setSuccessMessage(response.data.message || "Inscription réussie ! Redirection...");
             
-            // 1. Stocker le token JWT dans le stockage local
-            localStorage.setItem('authToken', token);
-            
-            // 2. Mettre à jour l'état de connexion de l'application parente (App.js)
-            // C'est essentiel pour afficher le bon contenu (admin vs public)
-            if (setIsLoggedIn) {
-                setIsLoggedIn(true);
-            }
-
-            console.log(message, 'Redirection vers l\'administration...');
-            
-            // 3. Redirection vers la page d'administration
-            navigate('/admin');
+            // Redirection vers la page de connexion après succès
+            setTimeout(() => {
+                navigate('/login'); 
+            }, 1500);
 
         } catch (err) {
-            console.error('Erreur de connexion:', err.response?.data?.error || err.message);
-            const errorMessage = err.response?.data?.error || "Erreur lors de la connexion. Veuillez vérifier vos identifiants.";
+            console.error('Erreur d\'inscription:', err);
+            // Afficher le message d'erreur du backend
+            const errorMessage = err.response?.data?.error || "Une erreur inconnue est survenue lors de l'inscription.";
             setError(errorMessage);
         }
     };
@@ -59,10 +65,11 @@ const Login = ({ setIsLoggedIn }) => {
             >
                 <FaArrowLeft /> Retour
             </button>
-            
-            <div className="login-card">
-                <h2><FaSignInAlt /> Connexion Administrateur</h2>
+
+            <div className="register-card">
+                <h2><FaUserPlus /> Inscription Administrateur</h2>
                 
+                {successMessage && <p className="success-message">{successMessage}</p>}
                 {error && <p className="error-message">{error}</p>}
                 
                 <form onSubmit={handleSubmit}>
@@ -73,7 +80,7 @@ const Login = ({ setIsLoggedIn }) => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Email"
+                            placeholder="Entrez votre email"
                             required
                         />
                     </div>
@@ -85,22 +92,34 @@ const Login = ({ setIsLoggedIn }) => {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Mot de passe"
+                            placeholder="Minimum 6 caractères"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="confirmPassword"><FaLock /> Confirmer le mot de passe</label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirmer le mot de passe"
                             required
                         />
                     </div>
 
                     <button type="submit" className="submit-button">
-                        Se connecter
+                        S'inscrire
                     </button>
                 </form>
-                
+
                 <p className="redirect-text">
-                    Pas encore de compte ? <span onClick={() => navigate('/register')} className="redirect-link">Inscrivez-vous ici.</span>
+                    Déjà un compte ? <span onClick={() => navigate('/login')} className="redirect-link">Connectez-vous ici.</span>
                 </p>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default Register;

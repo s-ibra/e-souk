@@ -1,82 +1,112 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 // ------------------------------------------------------------------
-// 1. IMPORTS DES COMPOSANTS DE BASE ET D'AUTHENTIFICATION
+// 1. IMPORTS DES COMPOSANTS
 // ------------------------------------------------------------------
-import Home from './Home'; 
-import Commerces from './components/Commerces'; 
-import RequireAuth from './components/RequireAuth'; // Le composant gardien
+// Base
+import Home from './components/Home'; // Assurez-vous que ce chemin est correct
+import Commerces from './components/Commerces'; // Assurez-vous que ce chemin est correct
 
-// --- Authentification ---
-import Login from './auth/Login'; 
-import LoginEmailOnly from './auth/LoginEmailOnly'; // Nouvelle route de débogage
+// Authentification (Doivent être dans src/auth/)
+import Login from './auth/Login';       
+import Register from './auth/Register'; // <-- Inscription
+// import LoginEmailOnly from './auth/LoginEmailOnly'; // Si vous maintenez cette route de débogage
+
+// Commerce (Boulangerie)
+import BoulangeriePublique from './commerce/BoulangeriePublique';
+import MaBoulangerieAdmin from './commerce/MaBoulangerieAdmin'; 
 
 // ------------------------------------------------------------------
-// 2. IMPORTS DES PAGES DE COMMERCE (TOUTES DEPUIS ./commerce)
+// 2. LOGIQUE D'AUTHENTIFICATION (GARDES-ROUTES)
 // ------------------------------------------------------------------
-// --- BOULANGERIE ---
-import BoulangeriePublique from './commerce/BoulangeriePublique'; 
-import MaBoulangerieAdmin from './commerce/MaBoulangerieAdmin'; // C'est lui qui est utilisé
 
-// --- SAVONS (Exemple) ---
-import SavonsPublique from './commerce/SavonsPublique'; 
-import MesSavons from './commerce/MesSavons'; 
+// Vérifie si le token JWT est présent et non expiré dans le localStorage
+const checkAuth = () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return false;
 
-// --- GÂTEAUX ---
-import CakePublique from './commerce/CakePublique'; 
-import MyCake from './commerce/Mycake'; 
+    try {
+        // Décode le token pour vérifier sa date d'expiration
+        const decoded = jwtDecode(token);
+        // exp est en secondes, Date.now() est en millisecondes
+        if (decoded.exp * 1000 < Date.now()) {
+            localStorage.removeItem('authToken'); // Le token a expiré
+            return false;
+        }
+        return true;
+    } catch (e) {
+        // Erreur de décodage (token invalide)
+        localStorage.removeItem('authToken'); 
+        return false;
+    }
+};
 
-// --- PÉRICULTURE ---
-import PericulturePublique from './commerce/PericulturePublique'; 
-import MaPericulture from './commerce/Mapericulture'; 
+// Composant Gardien : Protège les routes
+const RequireAuth = ({ children }) => {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+        // Si non authentifié, redirige vers la page de connexion
+        return <Navigate to="/login" replace />;
+    }
+    return children;
+};
 
-
+// ------------------------------------------------------------------
+// 3. COMPOSANT PRINCIPAL APP
+// ------------------------------------------------------------------
 const App = () => {
-  return (
-    <Router>
-      <Routes>
-        
-        {/* ---------------------------------------------------- */}
-        {/* A. ROUTES PUBLIQUES (Accessibles à tous) */}
-        {/* ---------------------------------------------------- */}
-        <Route path="/" element={<Home />} />
-        <Route path="/commerces" element={<Commerces />} />
-        
-        {/* Route de connexion standard */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* NOUVELLE ROUTE DE DÉBOGAGE SANS MOT DE PASSE */}
-        <Route path="/login-debug" element={<LoginEmailOnly />} /> 
+    // État de connexion initialisé par la vérification du token
+    const [isLoggedIn, setIsLoggedIn] = useState(checkAuth());
 
-        {/* Chemins publics des commerces */}
-        <Route path="/boulangerie-publique" element={<BoulangeriePublique />} />
-        <Route path="/savons-publique" element={<SavonsPublique />} />
-        <Route path="/cake-publique" element={<CakePublique />} />
-        <Route path="/periculture-publique" element={<PericulturePublique />} />
+    // Fonction de déconnexion
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        setIsLoggedIn(false);
+        // Redirection après la déconnexion
+        // Utilisation de window.location.href pour un rafraîchissement complet
+        window.location.href = '/login'; 
+    };
+    
+    return (
+        <Router>
+            <Routes>
+                
+                {/* ---------------------------------------------------- */}
+                {/* A. ROUTES PUBLIQUES (Accessibles à tous) */}
+                {/* ---------------------------------------------------- */}
+                <Route path="/" element={<Home />} />
+                <Route path="/commerces" element={<Commerces />} />
+                
+                {/* Pages d'Authentification */}
+                {/* Le composant Login reçoit la fonction setIsLoggedIn pour mettre à jour l'état global */}
+                <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} /> 
+                <Route path="/register" element={<Register />} /> 
 
-        
-        {/* ---------------------------------------------------- */}
-        {/* B. ROUTES PROTÉGÉES (Nécessitent une connexion) */}
-        {/* ---------------------------------------------------- */}
-        <Route element={<RequireAuth />}>
-          
-          {/* Chemins privés des commerces (cible de la redirection après login) */}
-          <Route path="/ma-boulangerie" element={<MaBoulangerieAdmin />} />
-          
-          {/* Les autres routes protégées restent inchangées: */}
-          <Route path="/mes-savons" element={<MesSavons />} />
-          <Route path="/my-cake" element={<MyCake />} />
-          <Route path="/ma-periculture" element={<MaPericulture />} />
-          
-        </Route>
-        
-        {/* Route 404/Not Found (Optionnel mais recommandé) */}
-        <Route path="*" element={<h1>404 - Page non trouvée</h1>} />
-        
-      </Routes>
-    </Router>
-  );
+                {/* Chemin public des produits */}
+                <Route path="/boulangerie" element={<BoulangeriePublique />} />
+                
+                {/* ---------------------------------------------------- */}
+                {/* B. ROUTES PROTÉGÉES (Admin) */}
+                {/* ---------------------------------------------------- */}
+                {/* La route /admin est désormais protégée par RequireAuth */}
+                <Route 
+                    path="/admin" 
+                    element={
+                        <RequireAuth>
+                            {/* Le composant Admin reçoit la fonction de déconnexion */}
+                            <MaBoulangerieAdmin handleLogout={handleLogout} />
+                        </RequireAuth>
+                    } 
+                />
+                
+                {/* Route 404/Not Found */}
+                <Route path="*" element={<h1>404 - Page non trouvée</h1>} />
+                
+            </Routes>
+        </Router>
+    );
 };
 
 export default App;
